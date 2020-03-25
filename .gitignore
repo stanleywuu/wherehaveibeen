@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs/wherehaveibeen/v16/.suo
+/.vs
+/Backend/WhereHaveIBeen/.vs/WhereHaveIBeen/v16
+/Backend/WhereHaveIBeen/WhereHaveIBeen/obj
+/Backend/WhereHaveIBeen/WhereHaveIBeen/Properties/PublishProfiles
+/Backend/WhereHaveIBeen/Application/obj
+/Backend/WhereHaveIBeen/Application/bin/Debug/netstandard2.0
+/Backend/WhereHaveIBeen/Storage/bin/Debug/netstandard2.0
+/Backend/WhereHaveIBeen/Storage/obj
+/Backend/WhereHaveIBeen/WhereHaveIBeen/bin
