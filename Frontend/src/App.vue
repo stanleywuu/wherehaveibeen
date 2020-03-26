@@ -41,8 +41,12 @@ export default {
   margin-top: 60px;
 }
 
-#login-form-card, #authed-user {
+#login-form-card {
   width: 50%;
+  margin: auto;
+}
+#authed-user {
+  width: 75%;
   margin: auto;
 }
 </style>
