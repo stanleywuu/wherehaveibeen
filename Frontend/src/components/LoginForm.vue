@@ -36,7 +36,6 @@
         </b-row>
       </b-container>
       <b-button id="login-form-submit-btn" class="login-form-btn" variant="primary" type="submit">Login</b-button>
-      <b-button id="login-form-return-btn" class="login-form-btn" variant="outline-primary" @click="$emit('cancel-login')">Back</b-button>
     </b-form>
   </div>
 </template>
@@ -56,6 +55,7 @@ export default {
     onLoginSubmit (evt) {
       evt.preventDefault()
       console.log('Logging in as ' + this.form.email)
+      this.$store.dispatch('storeUserAuth', true)
     }
   }
 }
@@ -64,10 +64,6 @@ export default {
 <style scoped>
 .form-group {
   text-align: left !important;
-}
-.login-form-btn {
-  margin-top: 5px;
-  margin-right: 20px;
 }
 </style>
 
