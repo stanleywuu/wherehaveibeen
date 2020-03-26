@@ -4,6 +4,8 @@
 
 /.vs/wherehaveibeen/v16/.suo
 /.vs
+.vscode/
+
 /Backend/WhereHaveIBeen/.vs/WhereHaveIBeen/v16
 /Backend/WhereHaveIBeen/WhereHaveIBeen/obj
 /Backend/WhereHaveIBeen/WhereHaveIBeen/Properties/PublishProfiles
@@ -12,3 +14,5 @@
 /Backend/WhereHaveIBeen/Storage/bin/Debug/netstandard2.0
 /Backend/WhereHaveIBeen/Storage/obj
 /Backend/WhereHaveIBeen/WhereHaveIBeen/bin
+
+Frontend/node_modules/
