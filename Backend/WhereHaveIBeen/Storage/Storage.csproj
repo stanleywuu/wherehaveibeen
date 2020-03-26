@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.44.1" />
+    <PackageReference Include="GoogleApi" Version="3.9.10" />
     <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
   </ItemGroup>
 

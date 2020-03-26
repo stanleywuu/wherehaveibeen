@@ -12,15 +12,17 @@ using Storage;
 
 namespace WhereHaveIBeen.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class VisitController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<string>> Get()
+        public async Task<ActionResult<string>> Get([FromQuery] int userId = 0)
         {
+            // TODO: Make sure userId IS current user
             var conn = ContextProvider.Conn;
-            var users = await conn.QueryAsync<Visit>("");
+            var users = await conn.Table<Visit>().Where(v => v.UserId == userId).ToListAsync();
+
             StringBuilder sb = new StringBuilder();
 
             foreach (var user in users)
@@ -36,7 +38,7 @@ namespace WhereHaveIBeen.Controllers
         public async Task<ActionResult<string>> Create([FromBody]VisitRequest request)
         {
             var conn = ContextProvider.Conn;
-            await conn.InsertAsync(request.ToPersistedData());
+            await conn.InsertAsync(await request.ToPersistedData());
 
             return new OkObjectResult("Visit has been logged");
         }

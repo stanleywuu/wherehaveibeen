@@ -17,16 +17,8 @@ namespace Application.Requests
 
         public int UserId { get; set; }
 
-        public Visit ToPersistedData()
-        {
-            return new Visit()
-            {
-                UserId = UserId,
-                 CheckIn = CheckIn,
-                 CheckOut = CheckOut,
-                 Longitude = Longitude,
-                 Latitude = Latitude
-            };
-        }
+        public bool AtRisk { get; set; }
+
+
     }
 }

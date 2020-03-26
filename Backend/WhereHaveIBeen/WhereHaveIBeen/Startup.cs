@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application;
 using Application.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,8 @@ namespace WhereHaveIBeen
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            ApplicationConfig.GoogleKey = Configuration["ApiKeys:Google"];
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

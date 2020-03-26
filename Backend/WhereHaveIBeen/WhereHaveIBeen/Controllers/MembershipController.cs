@@ -85,6 +85,7 @@ namespace WhereHaveIBeen.Controllers
 
             var response = new TokenResponse()
             {
+                UserId = user.UserId,
                 Token = token
             };
 
@@ -92,7 +93,7 @@ namespace WhereHaveIBeen.Controllers
         }
 
         [HttpPost("token")]
-        public async Task<ActionResult> LoginWithToken(string token)
+        public async Task<ActionResult<int>> LoginWithToken(string token)
         {
             var now = DateTime.Now;
 
@@ -104,7 +105,8 @@ namespace WhereHaveIBeen.Controllers
             {
                 return Unauthorized();
             }
-            return new OkResult();
+
+            return new ObjectResult(user.UserId);
         }
     }
 }
