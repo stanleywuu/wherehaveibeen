@@ -4,6 +4,8 @@
 
 /.vs/wherehaveibeen/v16/.suo
 /.vs
+.vscode/
+
 /Backend/WhereHaveIBeen/.vs/WhereHaveIBeen/v16
 /Backend/WhereHaveIBeen/WhereHaveIBeen/obj
 /Backend/WhereHaveIBeen/WhereHaveIBeen/Properties/PublishProfiles
@@ -15,3 +17,5 @@
 /Backend/WhereHaveIBeen/.vs/WhereHaveIBeen/DesignTimeBuild/.dtbcache.v2
 /Backend/WhereHaveIBeen/Application/bin/Release/netstandard2.0
 /Backend/WhereHaveIBeen/Storage/bin/Release/netstandard2.0
+
+Frontend/node_modules/
