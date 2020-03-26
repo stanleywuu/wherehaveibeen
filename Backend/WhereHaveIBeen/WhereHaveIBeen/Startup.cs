@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Storage;
 
 namespace WhereHaveIBeen
 {
@@ -18,7 +20,9 @@ namespace WhereHaveIBeen
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            InitStorage().ConfigureAwait(false);
         }
+
 
         public IConfiguration Configuration { get; }
 
@@ -46,6 +50,11 @@ namespace WhereHaveIBeen
             {
                 endpoints.MapControllers();
             });
+        }
+        private async Task InitStorage()
+        {
+            await ContextProvider.Conn.CreateTableAsync<User>();
+            await ContextProvider.Conn.CreateTableAsync<Visit>();
         }
     }
 }
