@@ -12,3 +12,6 @@
 /Backend/WhereHaveIBeen/Storage/bin/Debug/netstandard2.0
 /Backend/WhereHaveIBeen/Storage/obj
 /Backend/WhereHaveIBeen/WhereHaveIBeen/bin
+/Backend/WhereHaveIBeen/.vs/WhereHaveIBeen/DesignTimeBuild/.dtbcache.v2
+/Backend/WhereHaveIBeen/Application/bin/Release/netstandard2.0
+/Backend/WhereHaveIBeen/Storage/bin/Release/netstandard2.0
