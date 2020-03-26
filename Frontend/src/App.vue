@@ -1,17 +1,18 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <b-card id='login-form-card' title="Login">
+      <LoginForm></LoginForm>
+    </b-card>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import LoginForm from '@/components/LoginForm.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    LoginForm
   }
 }
 </script>
@@ -24,5 +25,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+#login-form-card {
+  width: 50%;
+  margin: auto;
 }
 </style>
