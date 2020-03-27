@@ -1,7 +1,14 @@
 <template>
   <div id="app">
-    <b-card v-show="!this.userLoggedIn" id='login-form-card' title="Login">
-      <LoginForm></LoginForm>
+    <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
+      <b-tabs card>
+        <b-tab title='Login' id='login-form-card'>
+          <LoginForm></LoginForm>
+        </b-tab>
+        <b-tab title='Register' id='register-form-card'>
+          <h2>This is the registration form</h2>
+        </b-tab>
+      </b-tabs>
     </b-card>
     <div v-show="this.userLoggedIn" id='authed-user'>
       <UserOps></UserOps>
@@ -41,7 +48,7 @@ export default {
   margin-top: 60px;
 }
 
-#login-form-card {
+#user-auth-actons {
   width: 50%;
   margin: auto;
 }
