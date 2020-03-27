@@ -45,6 +45,7 @@ export default {
   name: 'LoginForm',
   data () {
     return {
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
       form: {
         email: '',
         password: ''
@@ -54,8 +55,18 @@ export default {
   methods: {
     onLoginSubmit (evt) {
       evt.preventDefault()
-      console.log('Logging in as ' + this.form.email)
-      this.$store.dispatch('storeUserAuth', true)
+      this.$http.post(this.apiEndpoint + '/membership/login', {
+        Username: this.form.email,
+        Password: this.form.password
+      })
+      .then(response => {
+        this.$store.dispatch('storeUserAuth', response.token)
+        this.$store.dispatch('storeUserId', response.userId)
+      })
+      .catch(e => {
+        console.log('Login Failed!')
+        console.log(e)
+      })
     }
   }
 }
