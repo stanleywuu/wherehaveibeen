@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <NavigationBar
+      :userLoggedIn="this.userLoggedIn">
+    </NavigationBar>
     <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card'>
@@ -11,24 +14,23 @@
       </b-tabs>
     </b-card>
     <div v-show="this.userLoggedIn" id='authed-user'>
-      <UserOps></UserOps>
       <CheckIn></CheckIn>
     </div>
   </div>
 </template>
 
 <script>
+import NavigationBar from '@/components/NavigationBar.vue'
 import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
-import UserOps from '@/components/UserOps.vue'
 import CheckIn from '@/components/CheckIn.vue'
 
 export default {
   name: 'App',
   components: {
+    NavigationBar,
     LoginForm,
     RegisterForm,
-    UserOps,
     CheckIn
   },
   computed: {
@@ -47,7 +49,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 #user-auth-actons {
