@@ -1,3 +1,4 @@
 export default {
-  userAuth: false
+  userAuth: false,
+  userId: null
 }
