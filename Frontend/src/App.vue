@@ -6,7 +6,7 @@
           <LoginForm></LoginForm>
         </b-tab>
         <b-tab title='Register' id='register-form-card'>
-          <h2>This is the registration form</h2>
+          <RegisterForm></RegisterForm>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -19,6 +19,7 @@
 
 <script>
 import LoginForm from '@/components/LoginForm.vue'
+import RegisterForm from '@/components/RegisterForm.vue'
 import UserOps from '@/components/UserOps.vue'
 import CheckIn from '@/components/CheckIn.vue'
 
@@ -26,6 +27,7 @@ export default {
   name: 'App',
   components: {
     LoginForm,
+    RegisterForm,
     UserOps,
     CheckIn
   },
