@@ -16,7 +16,7 @@
             <gmap-map
               :center="center"
               :zoom="zoomLevel"
-              style="width:100%; height: 100%;">
+              style="width:100%; height: 500px;">
               <gmap-marker
                 :position="center"
               ></gmap-marker>
@@ -27,6 +27,27 @@
               <b-card-text>
                 {{ this.currentPlace['formatted_address'] }}
                 <p/>
+                <b-row>
+                  <b-col md="6">
+                    <b-form-datepicker
+                      id="checkin-datepicker"
+                      v-model="checkInDate"
+                      :placeholder="formattedDate()"
+                      :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+                      today-button
+                      class="mb-3">
+                    </b-form-datepicker>
+                  </b-col>
+                  <b-col md="6">
+                    <b-form-timepicker
+                      id="checkin-timepicker"
+                      v-model="checkInTime"
+                      :placeholder="formattedTime()"
+                      now-button
+                      class="mb-3">
+                    </b-form-timepicker>
+                  </b-col>
+                </b-row>
                 <b-button>Check In Here</b-button>
               </b-card-text>
             </b-card-body>
@@ -47,6 +68,8 @@ export default {
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
+      checkInDate: '',
+      checkInTime: '',
       form: {
         locationSearch: ''
       }
@@ -56,6 +79,12 @@ export default {
     this.geolocate();
   },
   methods: {
+    formattedDate () {
+      return '01/01/1970'
+    },
+    formattedTime () {
+      return '00:00:00'
+    },
     setPlace (place) {
       this.currentPlace = place
       this.zoomLevel = 16
