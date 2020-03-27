@@ -5,11 +5,12 @@
     </NavigationBar>
     <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
       <b-tabs card>
-        <b-tab title='Login' id='login-form-card'>
+        <b-tab title='Login' id='login-form-card' ref='loginTab'>
           <LoginForm></LoginForm>
         </b-tab>
         <b-tab title='Register' id='register-form-card'>
-          <RegisterForm></RegisterForm>
+          <RegisterForm
+           @registrationComplete="registrationComplete()"></RegisterForm>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -37,8 +38,13 @@ export default {
     userLoggedIn () {
       return this.$store.getters.getUserAuth
     }
+  },
+  methods: {
+    registrationComplete () {
+      console.log('activating logintab')
+      this.$refs.loginTab.activate()
+    }
   }
-
 }
 </script>
 

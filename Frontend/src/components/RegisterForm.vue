@@ -101,6 +101,7 @@ export default {
   name: 'RegisterForm',
   data () {
     return {
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
       form: {
         fname: '',
         lname: '',
@@ -124,7 +125,20 @@ export default {
         alert('Passwords do not match!')
       }
       if (!registerError) {
-        console.log('Registered!')    
+        this.$http.post(this.apiEndpoint + '/membership', {
+          Username: [this.form.fname, this.form.lname].join(' '),
+          Email: this.form.email,
+          Password: this.form.password
+        })
+        .then(response => {
+          console.log('Successfully Registered')
+          console.log(response)
+          this.$emit('registrationComplete')
+        })
+        .catch(e => {
+          console.log('Registration Failed!')
+          console.log(e)
+        })
       }
     }
   }
