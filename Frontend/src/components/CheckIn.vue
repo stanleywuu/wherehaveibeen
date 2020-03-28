@@ -48,7 +48,7 @@
                     </b-form-timepicker>
                   </b-col>
                 </b-row>
-                <b-button>Check In Here</b-button>
+                <b-button @click="onCheckInSubmit()">Check In Here</b-button>
               </b-card-text>
             </b-card-body>
           </b-col>
@@ -63,6 +63,7 @@ export default {
   name: 'CheckIn',
   data () {
     return {
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
@@ -101,6 +102,16 @@ export default {
         }
       this.locatingUser = false
       })
+    },
+    onCheckInSubmit () {
+      let requestData = {
+        "userId": this.$store.getters.getUserId,
+        "latitude": this.center.lat,
+        "longitude": this.center.lng,
+        "checkin": [this.checkInDate, this.checkInTime].join('T')
+      }
+      console.log('POSTing to ' + this.apiEndpoint + '/visit')
+      console.log(requestData)
     }
   }
 }
