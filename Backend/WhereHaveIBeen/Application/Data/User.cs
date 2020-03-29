@@ -17,12 +17,15 @@ namespace Application.Data
         [Unique]
         public string Username { get; set; }
 
+        [Unique]
         public string Email { get; set; }
 
         public string Password { get; set; }
 
         public string Token { get; set; }
 
-        public DateTime? TokenExpiry { get;set;}
+        public DateTime? TokenExpiry { get; set; }
+
+        public bool AtRisk { get; set; }
     }
 }

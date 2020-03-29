@@ -78,7 +78,7 @@ namespace WhereHaveIBeen.Controllers
             var user = existingUsers.First();
             // it's good if it crashes here, we don't have to handle it ourselves
 
-            var token = Guid.NewGuid().ToString().Encrypt();
+            var token = AuthenticationUtilities.GenerateToken(user.UserId, user.Username);
             user.Token = token;
 
             await conn.InsertOrReplaceAsync(user);
@@ -92,8 +92,45 @@ namespace WhereHaveIBeen.Controllers
             return new ActionResult<TokenResponse>(response);
         }
 
+        [HttpPost("corona")]
+        public async Task<ActionResult> MarkAsPositive([FromBody] UserAtRiskRequest request)
+        {
+            var userId = request.UserId;
+            var conn = ContextProvider.Conn;
+            User user = null;
+            try
+            {
+                user = await conn.GetAsync<User>(userId);
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+
+            request.ToPersistedData(user);
+            await conn.RunInTransactionAsync((c) =>
+            {
+                var targetedDay = DateTime.Today.AddDays(-18);
+                var affectedVisits = c.Table<Visit>().Where(v =>
+                    v.UserId == userId &&
+                    v.CheckIn > targetedDay)
+                .ToList();
+
+                // we could either do this, or we could join, this is easier for now, let's set it
+                // this is all throw away since we can't connect to a sql instance
+                foreach (var visit in affectedVisits)
+                {
+                    visit.AtRisk = true;
+                }
+
+                c.UpdateAll(affectedVisits);
+                c.Update(user);
+            });
+            return new OkResult();
+        }
+
         [HttpPost("token")]
-        public async Task<ActionResult<int>> LoginWithToken(string token)
+        public async Task<ActionResult<int>> LoginWithToken([FromBody] string token)
         {
             var now = DateTime.Now;
 

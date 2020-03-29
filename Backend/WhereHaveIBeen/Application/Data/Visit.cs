@@ -18,6 +18,11 @@ namespace Application.Data
 
         public double LongitudeRounded { get; set; }
 
+        public double Latitude2Decimal { get; set; }
+
+        public double Longitude2Decimal { get; set; }
+
+
         public DateTime CheckIn { get; set; }
 
         public DateTime? CheckOut { get; set; }

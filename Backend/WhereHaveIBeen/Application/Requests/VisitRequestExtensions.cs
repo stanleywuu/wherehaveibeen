@@ -48,6 +48,8 @@ namespace Application.Requests
                 Latitude = request.Latitude,
                 LatitudeRounded = (double)Math.Round((decimal)request.Latitude, 3),
                 LongitudeRounded = (double)Math.Round((decimal)request.Longitude, 3),
+                Latitude2Decimal = (double)Math.Round((decimal)request.Latitude, 2),
+                Longitude2Decimal = (double)Math.Round((decimal)request.Longitude, 2),
                 PlaceId = placeId,
                 Address = address,
             };
