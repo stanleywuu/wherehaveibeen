@@ -64,21 +64,22 @@ export default {
   data () {
     return {
       apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiErrors: [],
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
-      checkInDate: '',
-      checkInTime: ''
+      checkInDate: this.formattedDate(),
+      checkInTime: this.formattedTime()
     }
   },
   methods: {
     formattedDate () {
-      return '01/01/1970'
+      return new Date().toJSON().slice(0,10)
     },
     formattedTime () {
-      return '00:00'
+      return new Date().toJSON().slice(11, 19)
     },
     setPlace (place) {
       this.currentPlace = place
@@ -114,6 +115,7 @@ export default {
       .catch(e => {
         console.log('Check In Failed!')
         console.log(e)
+        this.apiErrors.push(e)
       })
     }
   }

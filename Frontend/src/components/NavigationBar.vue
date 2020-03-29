@@ -14,8 +14,11 @@
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
-    <b-modal id="covid-modal">
-      <CovidModal></CovidModal>
+    <b-modal id="covid-modal" ref="covid-modal" hide-header hide-footer>
+      <CovidModal
+        @confirmReport="confirmReport()"
+        @cancelReport="cancelReport()">
+      </CovidModal>
     </b-modal>
   </div>
 </template>
@@ -29,10 +32,35 @@ export default {
     CovidModal
   },
   props: ['userLoggedIn'],
+  data () {
+    return {
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net'
+    }
+  },
   methods: {
     onUserLogout (evt) {
       evt.preventDefault()
       this.$store.dispatch('storeUserAuth', undefined)
+      this.$store.dispatch('storeUserId', undefined)
+    },
+    confirmReport() {
+      this.$refs['covid-modal'].hide()
+      let requestData = {
+        userId: this.$store.getters.getUserId,
+        IsAtRisk: true
+      }
+      this.$http.post(this.apiEndpoint + '/membership/corona', requestData)
+      .then(response => {
+        console.log("Successfully recorded report")
+        console.log(response)
+      })
+      .catch(e => {
+        console.log('Report Failed!')
+        console.log(e)
+      })
+    },
+    cancelReport() {
+      this.$refs['covid-modal'].hide()
     }
   }
 }
