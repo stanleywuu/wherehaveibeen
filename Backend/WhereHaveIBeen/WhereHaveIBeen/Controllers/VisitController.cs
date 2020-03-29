@@ -33,12 +33,9 @@ namespace WhereHaveIBeen.Controllers
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (var user in users)
-            {
-                sb.AppendLine(JsonConvert.SerializeObject(user));
-            }
+            var text = JsonConvert.SerializeObject(users);
 
-            var result = new OkObjectResult(sb.ToString());
+            var result = new OkObjectResult(text);
             return result;
         }
 
