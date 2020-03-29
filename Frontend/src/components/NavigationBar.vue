@@ -1,22 +1,45 @@
 <template>
-  <div id="nav-bar-container" v-show="userLoggedIn" class="mb-5">
-    <b-navbar toggleable type="dark" variant="dark">
+  <div id="nav-bar-container" class="mb-5">
+    <b-navbar toggleable="lg" type="dark" variant="dark">
       <b-navbar-brand>Where Have I Been?</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
-        <UserOps></UserOps>
+        <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
+          @click="$bvModal.show('covid-modal')"
+          v-show="userLoggedIn">
+          I Have COVID-19
+        </b-button>
+        <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
+          <b-dropdown-item href="#">History</b-dropdown-item>
+          <b-dropdown-item @click="onUserLogout">Log Out</b-dropdown-item>
+        </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-navbar>
+    <b-modal id="covid-modal">
+      <CovidModal></CovidModal>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import UserOps from '@/components/UserOps.vue'
+import CovidModal from '@/components/CovidModal.vue'
 
 export default {
   name: 'NavigationBar',
-  components: {
-    UserOps
+  components :{
+    CovidModal
   },
-  props: ['userLoggedIn']
+  props: ['userLoggedIn'],
+  methods: {
+    onUserLogout (evt) {
+      evt.preventDefault()
+      this.$store.dispatch('storeUserAuth', false)
+    }
+  }
 }
 </script>
+
+<style scoped>
+#covid-report-btn {
+  color: #343a40 !important;
+}
+</style>
