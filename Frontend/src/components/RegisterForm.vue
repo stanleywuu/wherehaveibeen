@@ -5,36 +5,6 @@
         <b-row class="my-1">
           <b-col cols="6">
             <b-form-group
-              id="fname-input-group"
-              label="First Name:"
-              label-for="fname-input">
-              <b-form-input
-                id="fname-input"
-                type="text"
-                required
-                autocomplete="given-name"
-                v-model="form.fname">
-              </b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col cols="6">
-            <b-form-group
-              id="lname-input-group"
-              label="Last Name:"
-              label-for="lname-input">
-              <b-form-input
-                id="lname-input"
-                type="text"
-                required
-                autocomplete="family-name"
-                v-model="form.lname">
-              </b-form-input>
-            </b-form-group>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col cols="6">
-            <b-form-group
               id="new-email-input-group"
               label="Email Address:"
               label-for="new-email-input">
@@ -90,6 +60,18 @@
             </b-form-group>
           </b-col>
         </b-row>
+        <b-row class="my-1">
+          <b-col cols="12">
+            <b-form-checkbox
+              id="priv-pol-check"
+              v-model="form.privacyPolicy"
+              name="priv-pol-check"
+              value=true
+              unchecked-value=false>
+              I accept the <a href="/privacyPolicy.html" target="_blank">Privacy Policy</a>
+            </b-form-checkbox>
+          </b-col>
+        </b-row>
       </b-container>
       <b-button id="register-form-submit-btn" class="register-form-btn" variant="primary" type="submit">Register</b-button>
     </b-form>
@@ -102,13 +84,13 @@ export default {
   data () {
     return {
       apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiResponse: '',
       form: {
-        fname: '',
-        lname: '',
         email: '',
         emailVerify: '',
         password: '',
-        passwordVerify: ''
+        passwordVerify: '',
+        privacyPolicy: false
       }
     }
   },
@@ -124,20 +106,30 @@ export default {
         registerError = true
         alert('Passwords do not match!')
       }
+      if (! this.form.privacyPolicy) {
+        registerError = true
+        alert('You must agree to the Privacy Policy')
+      }
       if (!registerError) {
+        let requestData = {
+          Username: this.form.email,
+          Email: this.form.email,
+          Password: this.form.password
+        }
+        console.log('POSTing to ' + this.apiEndpoint + '/membership')
+        console.log(requestData)
         this.$http.post(this.apiEndpoint + '/membership', {
           Username: [this.form.fname, this.form.lname].join(' '),
           Email: this.form.email,
           Password: this.form.password
         })
         .then(response => {
-          console.log('Successfully Registered')
-          console.log(response)
+          this.apiResponse = response
           this.$emit('registrationComplete')
         })
         .catch(e => {
           console.log('Registration Failed!')
-          console.log(e)
+          this.apiResponse = e.response
         })
       }
     }
