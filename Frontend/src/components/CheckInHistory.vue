@@ -1,7 +1,5 @@
 <template>
   <div id="checkin-history-container">
-    <!-- <b-card v-for="loc in this.mockData" :title="loc.Address" :key="loc.VisitId" class="location-card">
-    </b-card> -->
     <b-card 
       v-for="loc in this.mockData" 
       :title="loc.Address" 
@@ -13,7 +11,7 @@
           <gmap-map
             :center="findCenter(loc)"
             :zoom="zoomLevel"
-            style="width:100%; height: 300px;">
+            style="width:100%; height: 200px;">
             <gmap-marker
               :position="findCenter(loc)"
             ></gmap-marker>

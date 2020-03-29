@@ -55,13 +55,14 @@ export default {
   methods: {
     onLoginSubmit (evt) {
       evt.preventDefault()
-      this.$http.post(this.apiEndpoint + '/membership/login', {
+      let requestData = {
         Username: this.form.email,
         Password: this.form.password
-      })
+      }
+      this.$http.post(this.apiEndpoint + '/membership/login', requestData)
       .then(response => {
-        this.$store.dispatch('storeUserAuth', response.token)
-        this.$store.dispatch('storeUserId', response.userId)
+        this.$store.dispatch('storeUserAuth', response.data.token)
+        this.$store.dispatch('storeUserId', response.data.userId)
       })
       .catch(e => {
         console.log('Login Failed!')

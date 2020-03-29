@@ -32,7 +32,7 @@ export default {
   methods: {
     onUserLogout (evt) {
       evt.preventDefault()
-      this.$store.dispatch('storeUserAuth', false)
+      this.$store.dispatch('storeUserAuth', undefined)
     }
   }
 }

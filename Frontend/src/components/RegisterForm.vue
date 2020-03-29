@@ -118,11 +118,7 @@ export default {
         }
         console.log('POSTing to ' + this.apiEndpoint + '/membership')
         console.log(requestData)
-        this.$http.post(this.apiEndpoint + '/membership', {
-          Username: [this.form.fname, this.form.lname].join(' '),
-          Email: this.form.email,
-          Password: this.form.password
-        })
+        this.$http.post(this.apiEndpoint + '/membership', requestData)
         .then(response => {
           this.apiResponse = response
           this.$emit('registrationComplete')

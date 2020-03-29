@@ -70,21 +70,15 @@ export default {
       currentPlace: null,
       locatingUser: false,
       checkInDate: '',
-      checkInTime: '',
-      form: {
-        locationSearch: ''
-      }
+      checkInTime: ''
     }
-  },
-  mounted() {
-    this.geolocate();
   },
   methods: {
     formattedDate () {
       return '01/01/1970'
     },
     formattedTime () {
-      return '00:00:00'
+      return '00:00'
     },
     setPlace (place) {
       this.currentPlace = place
@@ -112,6 +106,15 @@ export default {
       }
       console.log('POSTing to ' + this.apiEndpoint + '/visit')
       console.log(requestData)
+      this.$http.post(this.apiEndpoint + '/visit', requestData)
+      .then(response => {
+        console.log('Check In Success!')
+        console.log(response)
+      })
+      .catch(e => {
+        console.log('Check In Failed!')
+        console.log(e)
+      })
     }
   }
 }

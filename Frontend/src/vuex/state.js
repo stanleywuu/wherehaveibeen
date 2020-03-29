@@ -1,4 +1,4 @@
 export default {
-  userAuth: false,
+  userAuth: undefined,
   userId: null
 }
