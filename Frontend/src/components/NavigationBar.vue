@@ -1,7 +1,7 @@
 <template>
   <div id="nav-bar-container" class="mb-5">
     <b-navbar toggleable="lg" type="dark" variant="dark">
-      <b-navbar-brand>Where Have I Been?</b-navbar-brand>
+      <b-navbar-brand href='#' @click="$emit('displayCheckIn')">Where Have I Been?</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
         <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
           @click="$bvModal.show('covid-modal')"
@@ -9,7 +9,7 @@
           I Have COVID-19
         </b-button>
         <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
-          <b-dropdown-item href="#">History</b-dropdown-item>
+          <b-dropdown-item @click="$emit('displayHistory')">History</b-dropdown-item>
           <b-dropdown-item @click="onUserLogout">Log Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
