@@ -8,6 +8,7 @@
     <ul>
       <li>Confirm or cancel your report with the buttons at the bottom</li>
       <li>Self-Isolate immediately</li>
+      <li>Check your check in history to make sure it is up-to-date</li>
       <li>Check local government advice and guidelines</li>
       <li>Get well soon</li>
     </ul>

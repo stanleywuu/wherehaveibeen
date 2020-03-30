@@ -71,7 +71,8 @@
                     This location has been stored
                   </b-alert>
                   <b-alert variant="danger" v-model="showFailureAlert">
-                    Failed to store this Check In. Please refresh or try again later
+                    Failed to store this Check In.<br/>
+                    Please refresh or try again later
                   </b-alert>
                   <b-button @click="onCheckInSubmit()">Check In Here</b-button>
                 </b-row>

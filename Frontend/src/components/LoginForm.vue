@@ -1,5 +1,8 @@
 <template>
   <div id='login-form-container'>
+    <b-alert variant="danger" v-model="alerts.invalidCredentials">
+      The email / password are incorrect
+    </b-alert>
     <b-form @submit="onLoginSubmit">
       <b-container fluid>
         <b-row class="my-1">
@@ -13,7 +16,7 @@
                 type="email"
                 required
                 autocomplete="username"
-                :state="this.state"
+                :state="fieldState.login"
                 v-model="form.email">
               </b-form-input>
             </b-form-group>
@@ -30,7 +33,7 @@
                 type="password"
                 required
                 autocomplete="current-password"
-                :state="this.state"
+                :state="fieldState.login"
                 v-model="form.password">
               </b-form-input>
             </b-form-group>
@@ -47,9 +50,16 @@ export default {
   name: 'LoginForm',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
-      state: null,
-      apiErrors: [],
+      api: {
+        endpoint: 'https://wherehaveibeen.azurewebsites.net',
+        errors: []
+      },
+      alerts: {
+        invalidCredentials: false
+      },
+      fieldState: {
+        login: null
+      },
       form: {
         email: '',
         password: ''
@@ -57,21 +67,26 @@ export default {
     }
   },
   methods: {
+    clearAlerts () {
+      this.alerts.invalidCredentials = false
+      this.fieldState.login = null
+    },
     onLoginSubmit (evt) {
       evt.preventDefault()
+      this.clearAlerts()
       let requestData = {
         Username: this.form.email,
         Password: this.form.password
       }
-      this.$http.post(this.apiEndpoint + '/membership/login', requestData)
+      this.$http.post(this.api.endpoint + '/membership/login', requestData)
       .then(response => {
-        this.state = true
         this.$store.dispatch('storeUserAuth', response.data.token)
         this.$store.dispatch('storeUserId', response.data.userId)
       })
       .catch(e => {
-        this.state = false
-        this.apiErrors.push(e)
+        this.alerts.invalidCredentials = true
+        this.fieldState.login = false
+        this.api.errors.push(e)
       })
     }
   }

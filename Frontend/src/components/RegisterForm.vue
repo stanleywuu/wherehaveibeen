@@ -1,5 +1,17 @@
 <template>
   <div id='register-form-container'>
+    <b-alert variant="danger" v-model="validationAlerts.emailNotMatch">
+      The emails do not match
+    </b-alert>
+    <b-alert variant="danger" v-model="validationAlerts.emailNotUnique">
+      This email is already registered
+    </b-alert>
+    <b-alert variant="danger" v-model="validationAlerts.passwordNotMatch">
+      The passwords do not match
+    </b-alert>
+    <b-alert variant="danger" v-model="validationAlerts.policyNotChecked">
+      You must agree to the Privacy Policy
+    </b-alert>
     <b-form @submit="onRegisterSubmit">
       <b-container fluid>
         <b-row class="my-1">
@@ -13,6 +25,7 @@
                 type="email"
                 required
                 autocomplete="username"
+                :state="fieldStatus.email"
                 v-model="form.email">
               </b-form-input>
             </b-form-group>
@@ -26,6 +39,7 @@
                 id="email-validate-input"
                 type="email"
                 required
+                :state="fieldStatus.email"
                 v-model="form.emailVerify">
               </b-form-input>
             </b-form-group>
@@ -42,6 +56,7 @@
                 type="password"
                 required
                 autocomplete="new-password"
+                :state="fieldStatus.password"
                 v-model="form.password">
               </b-form-input>
             </b-form-group>
@@ -55,6 +70,7 @@
                 id="password-validate-input"
                 type="password"
                 required
+                :state="fieldStatus.password"
                 v-model="form.passwordVerify">
               </b-form-input>
             </b-form-group>
@@ -67,7 +83,8 @@
               v-model="form.privacyPolicy"
               name="priv-pol-check"
               value=true
-              unchecked-value=false>
+              unchecked-value=false
+              :state="fieldStatus.policy">
               I accept the <a href="/privacyPolicy.html" target="_blank">Privacy Policy</a>
             </b-form-checkbox>
           </b-col>
@@ -83,8 +100,21 @@ export default {
   name: 'RegisterForm',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
-      apiResponse: '',
+      api: {
+        endpoint: 'https://wherehaveibeen.azurewebsites.net',
+        response: ''
+      },
+      validationAlerts: {
+        emailNotMatch: false,
+        emailNotUnique: false,
+        passwordNotMatch: false,
+        policyNotChecked: false,
+      },
+      fieldStatus:{ 
+        email: null,
+        password: null,
+        policy: null
+      },
       form: {
         email: '',
         emailVerify: '',
@@ -95,37 +125,46 @@ export default {
     }
   },
   methods: {
+    clearAlerts () {
+      this.validationAlerts.emailNotMatch = false
+      this.validationAlerts.emailNotUnique = false
+      this.validationAlerts.passwordNotMatch = false
+      this.validationAlerts.policyNotChecked = false
+      this.fieldStatus.email = null
+      this.fieldStatus.password = null
+      this.fieldStatus.policy = null
+    },
     onRegisterSubmit (evt) {
       evt.preventDefault()
-      let registerError = false
+      this.clearAlerts()
       if (this.form.email !== this.form.emailVerify) {
-        registerError = true
-        alert('Email addresses do not match!')
+        this.clearAlerts()
+        this.fieldStatus.email = false
+        this.validationAlerts.emailNotMatch = true
       }
-      if (this.form.password !== this.form.passwordVerify) {
-        registerError = true
-        alert('Passwords do not match!')
+      else if (this.form.password !== this.form.passwordVerify) {
+        this.fieldStatus.password = false
+        this.validationAlerts.passwordNotMatch = true
       }
-      if (! this.form.privacyPolicy) {
-        registerError = true
-        alert('You must agree to the Privacy Policy')
+      else if (! this.form.privacyPolicy) {
+        this.fieldStatus.policy = false
+        this.validationAlerts.policyNotChecked = true
       }
-      if (!registerError) {
+      else {
         let requestData = {
           Username: this.form.email,
           Email: this.form.email,
           Password: this.form.password
         }
-        console.log('POSTing to ' + this.apiEndpoint + '/membership')
-        console.log(requestData)
-        this.$http.post(this.apiEndpoint + '/membership', requestData)
+        this.$http.post(this.api.endpoint + '/membership', requestData)
         .then(response => {
-          this.apiResponse = response
+          this.api.response = response
           this.$emit('registrationComplete')
         })
         .catch(e => {
-          console.log('Registration Failed!')
-          this.apiResponse = e.response
+          this.fieldStatus.email = false
+          this.validationAlerts.emailNotUnique = true
+          this.api.response = e.response
         })
       }
     }
