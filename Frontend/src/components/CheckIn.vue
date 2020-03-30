@@ -90,9 +90,11 @@ export default {
   name: 'CheckIn',
   data () {
     return {
-      apiEndpoint: process.env.VUE_APP_API_URL,
-      apiResponses: [],
-      apiErrors: [],
+      api: {
+        endpoint: process.env.VUE_APP_API_URL,
+        responses: [],
+        errors: []
+      },
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
@@ -149,16 +151,16 @@ export default {
         "longitude": this.center.lng,
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
-      this.$http.post(this.apiEndpoint + '/visit', requestData)
+      this.$http.post(this.api.endpoint + '/visit', requestData)
       .then(response => {
         this.showFailureAlert = false
         this.showSuccessAlert = true
-        this.apiResponses.push(response)
+        this.api.responses.push(response)
       })
       .catch(e => {
         this.showSuccessAlert = false
         this.showFailureAlert = true
-        this.apiErrors.push(e)
+        this.api.errors.push(e)
       })
     }
   }

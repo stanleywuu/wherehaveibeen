@@ -10,6 +10,7 @@
         </b-button>
         <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
           <b-dropdown-item @click="$emit('displayHistory')">History</b-dropdown-item>
+          <b-dropdown-item @click="$emit('displaySettings')">Settings</b-dropdown-item>
           <b-dropdown-item @click="onUserLogout">Log Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -34,9 +35,11 @@ export default {
   props: ['userLoggedIn'],
   data () {
     return {
-      apiEndpoint: process.env.VUE_APP_API_URL,
-      apiResponse: [],
-      apiErrors: []
+      api: {
+        endpoint: process.env.VUE_APP_API_URL,
+        responses: [],
+        errors: []
+      },
     }
   },
   methods: {
@@ -51,12 +54,12 @@ export default {
         userId: this.$store.getters.getUserId,
         IsAtRisk: true
       }
-      this.$http.post(this.apiEndpoint + '/membership/corona', requestData)
+      this.$http.post(this.api.endpoint + '/membership/corona', requestData)
       .then(response => {
-        this.apiResponse.push(response)
+        this.api.responses.push(response)
       })
       .catch(e => {
-        this.apiErrors.push(e)
+        this.api.errors.push(e)
       })
     },
     cancelReport() {
