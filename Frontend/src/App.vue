@@ -6,6 +6,7 @@
       @displayHistory="displayHistory()"
       @displaySettings="displaySettings()">
     </NavigationBar>
+    <Welcome v-show="!this.userLoggedIn" />
     <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card' ref='loginTab'>
@@ -18,6 +19,7 @@
         </b-tab>
       </b-tabs>
     </b-card>
+    <Confidentiality v-show="!this.userLoggedIn" />
     <div v-show="this.userLoggedIn && this.showCheckin" id='authed-user'>
       <CheckIn></CheckIn>
     </div>
@@ -36,6 +38,8 @@ import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
 import CheckIn from '@/components/CheckIn.vue'
 import CheckInHistory from '@/components/CheckInHistory.vue'
+import Welcome from '@/components/Welcome.vue'
+import Confidentiality from '@/components/Confidentiality.vue'
 import Settings from '@/components/Settings.vue'
 
 export default {
@@ -46,6 +50,8 @@ export default {
     RegisterForm,
     CheckIn,
     CheckInHistory,
+    Welcome,
+    Confidentiality,
     Settings
   },
   data () {
