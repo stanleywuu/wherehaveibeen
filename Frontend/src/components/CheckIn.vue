@@ -25,11 +25,15 @@
             </gmap-map>
           </b-col>
           <b-col md="6">
-            <b-card-body :title="this.currentPlace['name']">
-              <b-card-text>
+            <b-card-body
+              :title="this.currentPlace['name']"
+              class="d-flex align-items-start flex-column bd-highlight"
+              style="height: 100%;">
+              <div class="bd-highlight">
                 {{ this.currentPlace['formatted_address'] }}
-                <p/>
-                <b-row>
+              </div>
+              <div class="bd-highlight">
+                <b-row id="datetime-pickers">
                   <b-col md="6">
                     <b-form-datepicker
                       id="checkin-datepicker"
@@ -50,16 +54,25 @@
                     </b-form-timepicker>
                   </b-col>
                 </b-row>
-                <b-row>
-                    <b-col md="6">
-                        <p>Latitude: {{center.lat}}</p>
-                    </b-col>
-                    <b-col md="6">
-                        <p>Longitude: {{center.lng}}</p>
-                    </b-col>
+              </div>
+              <div class="mb-auto bd-highlight">
+                <b-row id="long-lat-display">
+                  <b-col md="6">
+                    <p>Latitude: {{center.lat}}</p>
+                  </b-col>
+                  <b-col md="6">
+                    <p>Longitude: {{center.lng}}</p>
+                  </b-col>
                 </b-row>
-                <b-button @click="onCheckInSubmit()">Check In Here</b-button>
-              </b-card-text>
+              </div>
+              <div class="bd-highlight">
+                <b-row id="submit-alert" class="align-self-end">
+                  <b-alert variant="success" v-model="showSuccess">
+                    This location has been stored
+                  </b-alert>
+                  <b-button @click="onCheckInSubmit()">Check In Here</b-button>
+                </b-row>
+              </div>
             </b-card-body>
           </b-col>
         </b-row>
@@ -82,6 +95,7 @@ export default {
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
+      showSuccess: false
     }
   },
   methods: {
@@ -115,18 +129,13 @@ export default {
       this.locatingUser = false
       })
     },
-    clickedOnMap(e)
+    clickedOnMap (e)
     {
-        var latitude = e.latLng.lat();
-        var longitude = e.latLng.lng();
-        console.log(latitude + "," + longitude );
-     
-        this.center.lat = latitude;
-        this.center.lng = longitude;
-        //var mapObject = this.$refs.map.$mapObject;
-        //google.maps.event.trigger(mapObject,
+      this.center.lat = e.latLng.lat()
+      this.center.lng = e.latLng.lng()
+      //var mapObject = this.$refs.map.$mapObject;
+      //google.maps.event.trigger(mapObject,
     },
-
     onCheckInSubmit () {
       let requestData = {
         "userId": this.$store.getters.getUserId,
@@ -138,6 +147,7 @@ export default {
       console.log(requestData)
       this.$http.post(this.apiEndpoint + '/visit', requestData)
       .then(response => {
+        this.showSuccess = true
         console.log('Check In Success!')
         console.log(response)
       })
@@ -154,5 +164,14 @@ export default {
 <style scoped>
 .form-group {
   text-align: left !important;
+}
+.bd-highlight, .card-title, #submit-alert {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 10px;
+}
+#submit-alert {
+  padding-left:25px;
 }
 </style>
