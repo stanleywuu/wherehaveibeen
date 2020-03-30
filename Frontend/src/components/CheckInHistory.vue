@@ -35,6 +35,7 @@ export default {
   data () {
     return {
       apiEndpoint: process.env.VUE_APP_API_URL,
+      apiErrors: [],
       locations: [],
       zoomLevel: 14
     }
@@ -61,8 +62,7 @@ export default {
           this.locations = response.data.reverse()
         })
         .catch(e => {
-          console.log('Failed to load history')
-          console.log(e)
+          this.apiErrors.push(e)
         })
       }
     },
