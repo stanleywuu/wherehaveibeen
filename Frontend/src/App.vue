@@ -51,7 +51,7 @@ export default {
     CheckIn,
     CheckInHistory,
     Welcome,
-    Confidentiality
+    Confidentiality,
     Settings
   },
   data () {
