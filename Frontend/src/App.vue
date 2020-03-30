@@ -3,7 +3,8 @@
     <NavigationBar
       :userLoggedIn="this.userLoggedIn"
       @displayCheckIn="displayCheckinForm()"
-      @displayHistory="displayHistory()">
+      @displayHistory="displayHistory()"
+      @displaySettings="displaySettings()">
     </NavigationBar>
     <Welcome />
     <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
@@ -25,6 +26,9 @@
     <div v-show="this.userLoggedIn && this.showHistory" id='authed-user'>
       <CheckInHistory></CheckInHistory>
     </div>
+    <div v-show="this.userLoggedIn && this.showSettings" id='authed-user'>
+      <Settings></Settings>
+    </div>
   </div>
 </template>
 
@@ -36,6 +40,7 @@ import CheckIn from '@/components/CheckIn.vue'
 import CheckInHistory from '@/components/CheckInHistory.vue'
 import Welcome from '@/components/Welcome.vue'
 import Confidentiality from '@/components/Confidentiality.vue'
+import Settings from '@/components/Settings.vue'
 
 export default {
   name: 'App',
@@ -47,11 +52,13 @@ export default {
     CheckInHistory,
     Welcome,
     Confidentiality
+    Settings
   },
   data () {
     return {
       showCheckin: true,
-      showHistory: false
+      showHistory: false,
+      showSettings: false
     }
   },
   computed: {
@@ -63,13 +70,22 @@ export default {
     registrationComplete () {
       this.$refs.loginTab.activate()
     },
-    displayCheckinForm () {
+    clearComponents () {
+      this.showCheckin = false
       this.showHistory = false
+      this.showSettings = false
+    },
+    displayCheckinForm () {
+      this.clearComponents()
       this.showCheckin = true
     },
     displayHistory () {
-      this.showCheckin = false
+      this.clearComponents()
       this.showHistory = true
+    },
+    displaySettings () {
+      this.clearComponents()
+      this.showSettings = true
     }
   }
 }
