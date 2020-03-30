@@ -102,7 +102,8 @@ export default {
     return {
       api: {
         endpoint: process.env.VUE_APP_API_URL,
-        response: ''
+        responses: [],
+        errors: []
       },
       validationAlerts: {
         emailNotMatch: false,
@@ -125,6 +126,7 @@ export default {
     }
   },
   methods: {
+    /* I am NOT a fan of this */
     clearAlerts () {
       this.validationAlerts.emailNotMatch = false
       this.validationAlerts.emailNotUnique = false
@@ -158,13 +160,13 @@ export default {
         }
         this.$http.post(this.api.endpoint + '/membership', requestData)
         .then(response => {
-          this.api.response = response
+          this.api.responses.push(response)
           this.$emit('registrationComplete')
         })
         .catch(e => {
           this.fieldStatus.email = false
           this.validationAlerts.emailNotUnique = true
-          this.api.response = e.response
+          this.api.errors.push(e)
         })
       }
     }

@@ -34,8 +34,10 @@ export default {
   name: 'CheckInHistory',
   data () {
     return {
-      apiEndpoint: process.env.VUE_APP_API_URL,
-      apiErrors: [],
+      api: {
+        endpoint: process.env.VUE_APP_API_URL,
+        errors: []
+      },
       locations: [],
       zoomLevel: 14
     }
@@ -57,12 +59,12 @@ export default {
     loadHistory () {
       let userId = this.currentUserId
       if (userId !== undefined) {
-        this.$http.get(this.apiEndpoint + '/visit?userId=' + userId)
+        this.$http.get(this.api.endpoint + '/visit?userId=' + userId)
         .then(response => {
           this.locations = response.data.reverse()
         })
         .catch(e => {
-          this.apiErrors.push(e)
+          this.api.errors.push(e)
         })
       }
     },
