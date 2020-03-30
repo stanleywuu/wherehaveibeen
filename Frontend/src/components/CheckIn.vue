@@ -80,29 +80,22 @@ export default {
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
-      checkInDate: this.formattedDateWithValue(new Date()),
-      checkInTime: this.formattedTimeWithValue(new Date()),
+      checkInDate: this.formattedDate(),
+      checkInTime: this.formattedTime(),
     }
   },
   methods: {
-    formattedDateWithValue (date)
-    {
-      return date.getFullYear() + "-" + this.padDateTimeComponent(date.getMonth()+1) + "-" + this.padDateTimeComponent(date.getDate()); 
-    },
     formattedDate () {
       return new Date().toJSON().slice(0,10)
     },
     formattedTime () {
       return new Date().toJSON().slice(11, 19)
     },
-      getPosition: function(marker) {
+    getPosition: function(marker) {
       return {
         lat: parseFloat(marker.lat),
         lng: parseFloat(marker.lng)
       }
-    },
-    padDateTimeComponent(value){
-        return value.toString().padStart(2, "0");
     },
     setPlace (place) {
       this.currentPlace = place
