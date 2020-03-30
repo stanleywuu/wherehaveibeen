@@ -67,8 +67,11 @@
               </div>
               <div class="bd-highlight">
                 <b-row id="submit-alert" class="align-self-end">
-                  <b-alert variant="success" v-model="showSuccess">
+                  <b-alert variant="success" v-model="showSuccessAlert">
                     This location has been stored
+                  </b-alert>
+                  <b-alert variant="danger" v-model="showFailureAlert">
+                    Failed to store this Check In. Please refresh or try again later
                   </b-alert>
                   <b-button @click="onCheckInSubmit()">Check In Here</b-button>
                 </b-row>
@@ -95,7 +98,8 @@ export default {
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
-      showSuccess: false
+      showSuccessAlert: false,
+      showFailureAlert: false
     }
   },
   methods: {
@@ -147,11 +151,14 @@ export default {
       console.log(requestData)
       this.$http.post(this.apiEndpoint + '/visit', requestData)
       .then(response => {
-        this.showSuccess = true
+        this.showFailureAlert = false
+        this.showSuccessAlert = true
         console.log('Check In Success!')
         console.log(response)
       })
       .catch(e => {
+        this.showSuccessAlert = false
+        this.showFailureAlert = true
         console.log('Check In Failed!')
         console.log(e)
         this.apiErrors.push(e)
