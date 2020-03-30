@@ -83,7 +83,7 @@ export default {
   name: 'RegisterForm',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiEndpoint: process.env.VUE_APP_API_URL,
       apiResponse: '',
       form: {
         email: '',

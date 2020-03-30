@@ -73,7 +73,7 @@ export default {
   name: 'CheckIn',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiEndpoint: process.env.VUE_APP_API_URL,
       apiErrors: [],
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
@@ -120,7 +120,7 @@ export default {
         var latitude = e.latLng.lat();
         var longitude = e.latLng.lng();
         console.log(latitude + "," + longitude );
-     
+
         this.center.lat = latitude;
         this.center.lng = longitude;
         //var mapObject = this.$refs.map.$mapObject;

@@ -47,7 +47,7 @@ export default {
   name: 'LoginForm',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiEndpoint: process.env.VUE_APP_API_URL,
       state: null,
       apiErrors: [],
       form: {

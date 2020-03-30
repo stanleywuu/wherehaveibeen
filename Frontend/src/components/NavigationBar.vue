@@ -34,7 +34,7 @@ export default {
   props: ['userLoggedIn'],
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net'
+      apiEndpoint: process.env.VUE_APP_API_URL
     }
   },
   methods: {
