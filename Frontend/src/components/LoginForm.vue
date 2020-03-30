@@ -13,6 +13,7 @@
                 type="email"
                 required
                 autocomplete="username"
+                :state="this.state"
                 v-model="form.email">
               </b-form-input>
             </b-form-group>
@@ -29,6 +30,7 @@
                 type="password"
                 required
                 autocomplete="current-password"
+                :state="this.state"
                 v-model="form.password">
               </b-form-input>
             </b-form-group>
@@ -46,6 +48,8 @@ export default {
   data () {
     return {
       apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      state: null,
+      apiErrors: [],
       form: {
         email: '',
         password: ''
@@ -61,12 +65,13 @@ export default {
       }
       this.$http.post(this.apiEndpoint + '/membership/login', requestData)
       .then(response => {
+        this.state = true
         this.$store.dispatch('storeUserAuth', response.data.token)
         this.$store.dispatch('storeUserId', response.data.userId)
       })
       .catch(e => {
-        console.log('Login Failed!')
-        console.log(e)
+        this.state = false
+        this.apiErrors.push(e)
       })
     }
   }

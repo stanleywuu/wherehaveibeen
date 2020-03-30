@@ -1,7 +1,8 @@
 <template>
   <div id="checkin-history-container">
-    <b-card 
-      v-for="loc in this.mockData" 
+    <h2>Check-In History</h2>
+    <b-card
+      v-for="loc in this.locations" 
       :title="loc.Address" 
       :key="loc.VisitId" 
       class="location-card overflow-hidden"
@@ -19,11 +20,12 @@
         </b-col>
         <b-col md="6">
           <b-card-body :title="loc.Address">
-            {{ Date.parse(loc.CheckIn) }}
+            {{ dateFormatter(loc.CheckIn) }} 
           </b-card-body>
         </b-col>
       </b-row>
     </b-card>
+    <b-button @click="loadHistory()">Refresh</b-button>
   </div>
 </template>
 
@@ -32,19 +34,47 @@ export default {
   name: 'CheckInHistory',
   data () {
     return {
-      zoomLevel: 12,
-      mockData: [
-        {"VisitId":1,"Longitude":-79.769994,"Latitude":43.563917,"LatitudeRounded":43.564,"LongitudeRounded":-79.77,"CheckIn":"2012-03-19T07:22:00","CheckOut":"2012-03-19T09:22:00","UserId":1,"Address":"Mississauga, ON L5N 7V9, Canada","PlaceId":"ChIJ4ySOJydqK4gRqIMWbEw8fEY","AtRisk":false},
-        {"VisitId":2,"Longitude":-79.769994,"Latitude":43.563917,"LatitudeRounded":43.564,"LongitudeRounded":-79.77,"CheckIn":"2012-03-20T07:23:00","CheckOut":"2012-03-19T09:22:00","UserId":1,"Address":"Mississauga, ON L5N 7V9, Canada","PlaceId":"ChIJ4ySOJydqK4gRqIMWbEw8fEY","AtRisk":false}
-      ]
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      locations: [],
+      zoomLevel: 14
     }
   },
+  computed: {
+    currentUserId () {
+      return this.$store.getters.getUserId
+    }
+  },
+  watch: {
+    currentUserId () {
+      this.loadHistory()
+    }
+  },
+  mounted () {
+    this.loadHistory()
+  },
   methods: {
+    loadHistory () {
+      let userId = this.currentUserId
+      if (userId !== undefined) {
+        this.$http.get(this.apiEndpoint + '/visit?userId=' + userId)
+        .then(response => {
+          this.locations = response.data.reverse()
+        })
+        .catch(e => {
+          console.log('Failed to load history')
+          console.log(e)
+        })
+      }
+    },
     findCenter (location) {
       return {
         lat: location.Latitude,
         lng: location.Longitude
       }
+    },
+    dateFormatter (datetime) {
+      let epoch = new Date(Date.parse(datetime))
+      return epoch
     }
   }
 }

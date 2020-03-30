@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import App from './App.vue'
 import store from './vuex'
+import App from './App.vue'
 import axios from 'axios'
 import BootstrapVue from 'bootstrap-vue'
 import * as VueGoogleMaps from "vue2-google-maps"
