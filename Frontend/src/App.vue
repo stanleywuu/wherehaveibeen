@@ -5,7 +5,7 @@
       @displayCheckIn="displayCheckinForm()"
       @displayHistory="displayHistory()">
     </NavigationBar>
-    <Welcome />
+    <Welcome v-show="!this.userLoggedIn" />
     <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card' ref='loginTab'>
@@ -18,7 +18,7 @@
         </b-tab>
       </b-tabs>
     </b-card>
-    <Confidentiality />
+    <Confidentiality v-show="!this.userLoggedIn" />
     <div v-show="this.userLoggedIn && this.showCheckin" id='authed-user'>
       <CheckIn></CheckIn>
     </div>
