@@ -90,7 +90,7 @@ export default {
   name: 'CheckIn',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiEndpoint: process.env.VUE_APP_API_URL,
       apiResponses: [],
       apiErrors: [],
       // Example defaults to Montreal

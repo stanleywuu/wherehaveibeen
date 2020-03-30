@@ -101,7 +101,7 @@ export default {
   data () {
     return {
       api: {
-        endpoint: 'https://wherehaveibeen.azurewebsites.net',
+        endpoint: process.env.VUE_APP_API_URL,
         response: ''
       },
       validationAlerts: {
@@ -110,7 +110,7 @@ export default {
         passwordNotMatch: false,
         policyNotChecked: false,
       },
-      fieldStatus:{ 
+      fieldStatus:{
         email: null,
         password: null,
         policy: null

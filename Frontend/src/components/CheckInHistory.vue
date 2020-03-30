@@ -2,9 +2,9 @@
   <div id="checkin-history-container">
     <h2>Check-In History</h2>
     <b-card
-      v-for="loc in this.locations" 
-      :title="loc.Address" 
-      :key="loc.VisitId" 
+      v-for="loc in this.locations"
+      :title="loc.Address"
+      :key="loc.VisitId"
       class="location-card overflow-hidden"
       no-body>
       <b-row no-gutters>
@@ -20,7 +20,7 @@
         </b-col>
         <b-col md="6">
           <b-card-body :title="loc.Address">
-            {{ dateFormatter(loc.CheckIn) }} 
+            {{ dateFormatter(loc.CheckIn) }}
           </b-card-body>
         </b-col>
       </b-row>
@@ -34,7 +34,7 @@ export default {
   name: 'CheckInHistory',
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiEndpoint: process.env.VUE_APP_API_URL,
       apiErrors: [],
       locations: [],
       zoomLevel: 14

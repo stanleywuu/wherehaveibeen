@@ -51,7 +51,7 @@ export default {
   data () {
     return {
       api: {
-        endpoint: 'https://wherehaveibeen.azurewebsites.net',
+        endpoint: process.env.VUE_APP_API_URL,
         errors: []
       },
       alerts: {
