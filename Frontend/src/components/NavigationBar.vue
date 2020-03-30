@@ -6,7 +6,7 @@
         <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
           @click="$bvModal.show('covid-modal')"
           v-show="userLoggedIn">
-          I Have COVID-19
+          I Have Symptoms
         </b-button>
         <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
           <b-dropdown-item @click="$emit('displayHistory')">History</b-dropdown-item>
