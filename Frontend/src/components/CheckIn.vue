@@ -16,6 +16,8 @@
             <gmap-map
               :center="center"
               :zoom="zoomLevel"
+              ref ="map"
+              @click="clickedOnMap"
               style="width:100%; height: 500px;">
               <gmap-marker
                 :position="center"
@@ -48,6 +50,14 @@
                     </b-form-timepicker>
                   </b-col>
                 </b-row>
+                <b-row>
+                    <b-col md="6">
+                        <p>Latitude: {{center.lat}}</p>
+                    </b-col>
+                    <b-col md="6">
+                        <p>Longitude: {{center.lng}}</p>
+                    </b-col>
+                </b-row>
                 <b-button @click="onCheckInSubmit()">Check In Here</b-button>
               </b-card-text>
             </b-card-body>
@@ -69,22 +79,43 @@ export default {
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
-      checkInDate: '',
-      checkInTime: ''
+      checkInDate: this.formattedDateWithValue(new Date()),
+      checkInTime: this.formattedTimeWithValue(new Date()),
+      coordinates: new Array(),
     }
   },
   methods: {
+    formattedDateWithValue (date)
+    {
+      return date.getFullYear() + "-" + this.padDateTimeComponent(date.getMonth()+1) + "-" + this.padDateTimeComponent(date.getDate()); 
+    },
     formattedDate () {
-      return '01/01/1970'
+      const now = new Date();
+      return this.formattedDateWithValue(now);
+    },
+    formattedTimeWithValue (time)
+    {
+        return this.padDateTimeComponent(time.getHours()) + ":" + this.padDateTimeComponent(time.getMinutes()) + ":" + this.padDateTimeComponent(time.getSeconds());
     },
     formattedTime () {
-      return '00:00'
+        const now = new Date();
+        return this.formattedTimeWithValue(now);
+    },
+      getPosition: function(marker) {
+      return {
+        lat: parseFloat(marker.lat),
+        lng: parseFloat(marker.lng)
+      }
+    },
+    padDateTimeComponent(value){
+        return value.toString().padStart(2, "0");
     },
     setPlace (place) {
       this.currentPlace = place
       this.zoomLevel = 16
       this.center.lat = this.currentPlace.geometry.location.lat()
       this.center.lng = this.currentPlace.geometry.location.lng()
+
     },
     geolocate () {
       this.locatingUser = true
@@ -97,6 +128,18 @@ export default {
       this.locatingUser = false
       })
     },
+    clickedOnMap(e)
+    {
+        var latitude = e.latLng.lat();
+        var longitude = e.latLng.lng();
+        console.log(latitude + "," + longitude );
+     
+        this.center.lat = latitude;
+        this.center.lng = longitude;
+        //var mapObject = this.$refs.map.$mapObject;
+        //google.maps.event.trigger(mapObject,
+    },
+
     onCheckInSubmit () {
       let requestData = {
         "userId": this.$store.getters.getUserId,
