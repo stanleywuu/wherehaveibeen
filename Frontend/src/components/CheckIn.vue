@@ -91,6 +91,7 @@ export default {
   data () {
     return {
       apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiResponses: [],
       apiErrors: [],
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
@@ -148,20 +149,15 @@ export default {
         "longitude": this.center.lng,
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
-      console.log('POSTing to ' + this.apiEndpoint + '/visit')
-      console.log(requestData)
       this.$http.post(this.apiEndpoint + '/visit', requestData)
       .then(response => {
         this.showFailureAlert = false
         this.showSuccessAlert = true
-        console.log('Check In Success!')
-        console.log(response)
+        this.apiResponses.push(response)
       })
       .catch(e => {
         this.showSuccessAlert = false
         this.showFailureAlert = true
-        console.log('Check In Failed!')
-        console.log(e)
         this.apiErrors.push(e)
       })
     }

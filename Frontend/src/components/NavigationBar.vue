@@ -34,7 +34,9 @@ export default {
   props: ['userLoggedIn'],
   data () {
     return {
-      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net'
+      apiEndpoint: 'https://wherehaveibeen.azurewebsites.net',
+      apiResponse: [],
+      apiErrors: []
     }
   },
   methods: {
@@ -51,12 +53,10 @@ export default {
       }
       this.$http.post(this.apiEndpoint + '/membership/corona', requestData)
       .then(response => {
-        console.log("Successfully recorded report")
-        console.log(response)
+        this.apiResponse.push(response)
       })
       .catch(e => {
-        console.log('Report Failed!')
-        console.log(e)
+        this.apiErrors.push(e)
       })
     },
     cancelReport() {

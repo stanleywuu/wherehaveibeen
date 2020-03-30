@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     registrationComplete () {
-      console.log('activating logintab')
       this.$refs.loginTab.activate()
     },
     displayCheckinForm () {
