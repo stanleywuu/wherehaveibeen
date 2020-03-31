@@ -67,10 +67,10 @@
               </div>
               <div class="bd-highlight">
                 <b-row id="submit-alert" class="align-self-end">
-                  <b-alert variant="success" v-model="showSuccessAlert">
+                  <b-alert dismissible variant="success" v-model="showSuccessAlert">
                     This location has been stored
                   </b-alert>
-                  <b-alert variant="danger" v-model="showFailureAlert">
+                  <b-alert dismissible variant="danger" v-model="showFailureAlert">
                     Failed to store this Check In.<br/>
                     Please refresh or try again later
                   </b-alert>
@@ -145,13 +145,22 @@ export default {
       //google.maps.event.trigger(mapObject,
     },
     onCheckInSubmit () {
+      let userToken = this.$store.getters.getUserToken
       let requestData = {
         "userId": this.$store.getters.getUserId,
         "latitude": this.center.lat,
         "longitude": this.center.lng,
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
-      this.$http.post(this.api.endpoint + '/visit', requestData)
+      this.$http.post(
+        this.api.endpoint + '/visit',
+        requestData,
+        {
+          headers: {
+            Authorization: "Bearer " + userToken
+          }
+        }
+      )
       .then(response => {
         this.showFailureAlert = false
         this.showSuccessAlert = true

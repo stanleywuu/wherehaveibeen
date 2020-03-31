@@ -1,11 +1,18 @@
 <template>
   <div id="checkin-history-container">
-    <h2>Check-In History</h2>
+    <div id="title-bar" class="d-flex mb-4">
+      <div id="title-text" class="d-flex justify-content-center">
+        <h2>Check-In History</h2>
+      </div>
+      <div id="title-text" class="ml-auto d-flex justify-content-end">
+        <b-button @click="loadHistory()" id="refresh-button">Refresh</b-button>
+      </div>
+    </div>
     <b-card
       v-for="loc in this.locations"
       :title="loc.Address"
       :key="loc.VisitId"
-      class="location-card overflow-hidden"
+      class="location-card overflow-hidden mb-2"
       no-body>
       <b-row no-gutters>
         <b-col md="6">
@@ -25,7 +32,6 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-button @click="loadHistory()">Refresh</b-button>
   </div>
 </template>
 
@@ -81,9 +87,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.location-card {
-  margin-bottom: 10px;
-}
-</style>

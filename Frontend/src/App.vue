@@ -20,15 +20,9 @@
       </b-tabs>
     </b-card>
     <Confidentiality v-show="!this.userLoggedIn" />
-    <div v-show="this.userLoggedIn && this.showCheckin" id='authed-user'>
-      <CheckIn></CheckIn>
-    </div>
-    <div v-show="this.userLoggedIn && this.showHistory" id='authed-user'>
-      <CheckInHistory></CheckInHistory>
-    </div>
-    <div v-show="this.userLoggedIn && this.showSettings" id='authed-user'>
-      <Settings></Settings>
-    </div>
+    <CheckIn v-show="this.userLoggedIn && this.showCheckin" class='authed-user' />
+    <CheckInHistory v-show="this.userLoggedIn && this.showHistory" class='authed-user' />
+    <Settings v-show="this.userLoggedIn && this.showSettings" class='authed-user' />
   </div>
 </template>
 
@@ -104,7 +98,7 @@ export default {
   width: 50%;
   margin: auto;
 }
-#authed-user {
+.authed-user {
   width: 75%;
   margin: auto;
 }
