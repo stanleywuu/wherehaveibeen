@@ -40,6 +40,7 @@ namespace WhereHaveIBeen.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<string>> Create([FromBody]VisitRequest request)
         {
             var conn = ContextProvider.Conn;

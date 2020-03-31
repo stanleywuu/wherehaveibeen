@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Application;
 using Application.Data;
 using Application.Requests;
 using Application.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,6 +21,12 @@ namespace WhereHaveIBeen.Controllers
     [ApiController]
     public class MembershipController : ControllerBase
     {
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public MembershipController(IHttpContextAccessor httpContextAccessor)
+        {
+            this.httpContextAccessor = httpContextAccessor;
+        }
+
         // Ultra secret debug link, lol
         [HttpGet]
         public async Task<ActionResult<string>> Get()
@@ -144,6 +152,46 @@ namespace WhereHaveIBeen.Controllers
             }
 
             return new ObjectResult(user.UserId);
+        }
+
+        [HttpPost, Route("delete/{userId}"), Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> DeleteData(int userId)
+        {
+            var claims = httpContextAccessor.HttpContext.User;
+            var claim = claims.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null && int.TryParse(claim.Value, out int claimUserId))
+            {
+                if (userId != claimUserId)
+                {
+                    return Unauthorized();
+                }
+
+                var conn = ContextProvider.Conn;
+                var visitsToDelete = await conn.Table<Visit>().Where(v => v.UserId == userId).ToArrayAsync();
+                User user = null;
+                try
+                {
+                    user = await conn.GetAsync<User>(userId);
+                }
+                catch
+                { }
+                await conn.RunInTransactionAsync((c) =>
+                {
+                    foreach (var visit in visitsToDelete)
+                    {
+                        c.Delete(visit);
+                    }
+
+                    if (user != null)
+                    {
+                        c.Delete(user);
+                    }
+                });
+            }
+            else return Unauthorized();
+
+            return new OkResult();
         }
     }
 }
