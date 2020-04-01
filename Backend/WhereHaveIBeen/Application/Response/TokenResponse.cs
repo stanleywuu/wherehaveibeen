@@ -11,5 +11,7 @@ namespace Application.Response
         public string Token { get; set; }
 
         public DateTime? Expires { get; set; }
+
+        public bool HasUnseenNotification { get; set; }
     }
 }

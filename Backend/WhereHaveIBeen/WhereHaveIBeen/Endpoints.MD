@@ -25,7 +25,8 @@ Response
 {
     "userId": 1,
     "token": "YoWVr2vPxWCmJyvnvsO2aRAcG1nWyZwEFplUSTiDDwM=",
-    "expires": null
+    "expires": null,
+    "hasunseennotification":true
 }
 ```
 

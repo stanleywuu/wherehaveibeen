@@ -94,10 +94,35 @@ namespace WhereHaveIBeen.Controllers
             var response = new TokenResponse()
             {
                 UserId = user.UserId,
-                Token = token
+                Token = token,
+                HasUnseenNotification = await RiskAccess.IsPersonAtRisk(user.UserId)
             };
 
             return new ActionResult<TokenResponse>(response);
+        }
+
+        [HttpPost("recovered")]
+        public async Task<ActionResult> MarkAsRecovered([FromBody] UserAtRiskRequest request)
+        {
+            var userId = request.UserId;
+            var conn = ContextProvider.Conn;
+            User user = null;
+            try
+            {
+                user = await conn.GetAsync<User>(userId);
+                if (!user.AtRisk)
+                {
+                    return new OkResult();
+                }
+            }
+            catch
+            {
+                return Unauthorized();
+            }
+
+            user.AtRisk = false;
+            await conn.InsertOrReplaceAsync(user);
+            return new OkResult();
         }
 
         [HttpPost("corona")]
@@ -106,9 +131,20 @@ namespace WhereHaveIBeen.Controllers
             var userId = request.UserId;
             var conn = ContextProvider.Conn;
             User user = null;
+
+            // You can only mark yourself as having corona
+            /*if (UserUtilities.GetUserId(httpContextAccessor.HttpContext.User) != userId)
+            {
+                return Unauthorized();
+            }
+            */
             try
             {
                 user = await conn.GetAsync<User>(userId);
+                if (user.AtRisk)
+                {
+                    return new OkResult();
+                }
             }
             catch
             {
@@ -116,9 +152,10 @@ namespace WhereHaveIBeen.Controllers
             }
 
             request.ToPersistedData(user);
+
+            var targetedDay = DateTime.Today.AddDays(-18);
             await conn.RunInTransactionAsync((c) =>
             {
-                var targetedDay = DateTime.Today.AddDays(-18);
                 var affectedVisits = c.Table<Visit>().Where(v =>
                     v.UserId == userId &&
                     v.CheckIn > targetedDay)
@@ -134,6 +171,17 @@ namespace WhereHaveIBeen.Controllers
                 c.UpdateAll(affectedVisits);
                 c.Update(user);
             });
+
+            try
+            {
+                var affectedUserIds = await RiskAccess.GetUsersAffectedBy(userId, targetedDay);
+                await RiskAccess.PrepareUsersForNotification(affectedUserIds, DateTime.Now);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to notify user", ex);
+            }
+
             return new OkResult();
         }
 
@@ -175,7 +223,9 @@ namespace WhereHaveIBeen.Controllers
                     user = await conn.GetAsync<User>(userId);
                 }
                 catch
-                { }
+                {
+                }
+
                 await conn.RunInTransactionAsync((c) =>
                 {
                     foreach (var visit in visitsToDelete)

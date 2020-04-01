@@ -26,7 +26,7 @@ namespace WhereHaveIBeen.Controllers
         [HttpGet]
         public async Task<ActionResult<ICollection<Visit>>> GetRisks([FromQuery]double lat, [FromQuery]double lng, [FromQuery]DateTime? from, [FromQuery]DateTime? to)
         {
-            var riskyVisits = await UserDataGetters.GetAtRiskVisits(lat, lng, from, to);
+            var riskyVisits = await UserAccess.GetAtRiskVisits(lat, lng, from, to);
             return new OkObjectResult(riskyVisits);
         }
 
@@ -39,7 +39,7 @@ namespace WhereHaveIBeen.Controllers
             {
                 //return Unauthorized();
             }
-            var riskyVisits = await UserDataGetters.GetAtRiskVisits(userId, from, to);
+            var riskyVisits = await UserAccess.GetAtRiskVisits(userId, from, to);
             var riskyResponse = new List<RiskyVisitResponse>();
             var groupedRiskyVisits = new Dictionary<int, RiskyVisitResponse>();
 

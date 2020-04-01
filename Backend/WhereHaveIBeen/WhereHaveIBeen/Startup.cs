@@ -79,8 +79,16 @@ namespace WhereHaveIBeen
         }
         private async Task InitStorage()
         {
-            await ContextProvider.Conn.CreateTableAsync<User>();
-            await ContextProvider.Conn.CreateTableAsync<Visit>();
+            try
+            {
+                await ContextProvider.Conn.CreateTableAsync<User>();
+                await ContextProvider.Conn.CreateTableAsync<Visit>();
+                await ContextProvider.Conn.CreateTableAsync<PersonAtRisk>();
+            }
+            catch (Exception ex)
+            {
+                var d = ex;
+            }
         }
     }
 }

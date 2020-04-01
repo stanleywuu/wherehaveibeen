@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Data
 {
-    public class UserDataGetters
+    public class UserAccess
     {
         public static async Task<ICollection<Visit>> GetAtRiskVisits(double lat, double lng, DateTime? from, DateTime? to)
         {
@@ -33,14 +33,14 @@ select v1.VisitId, v1.CheckIn, v1.CheckOut as CheckOut, v1.Address as Address, v
 v2.CheckIn as CheckIn2, v2.CheckOut as CheckOut2, v2.Address as Address2, v2.Latitude as Latitude2, v2.Longitude as Longitude2
 from visit v1 
 inner join visit v2 
-	ON v2.latitude2Decimal = v1.latitude2Decimal
-	AND v2.longitude2Decimal = v1.longitude2Decimal
-	AND v2.userid <> v1.userid
-	AND v2.AtRisk = 1
+    ON v2.latitude2Decimal = v1.latitude2Decimal
+    AND v2.longitude2Decimal = v1.longitude2Decimal
+    AND v2.userid <> v1.userid
+    AND v2.AtRisk = 1
 where v1.userid = ?
 AND v1.CheckIn > ?
 AND (v2.CheckIn >= v1.CheckIn AND V2.CheckOut <= v1.CheckOut)
-", userId, startDate);
+", userId, startDate.Ticks);
             return result;
         }
     }
