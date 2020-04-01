@@ -1,7 +1,7 @@
 ﻿using Application.Data;
-using GoogleApi.Entities.Common.Enums;
 using GoogleApi.Entities.Maps.Geocoding.Common.Enums;
 using GoogleApi.Entities.Maps.Geocoding.Location.Request;
+using GoogleApi.Entities.Places.Details.Request;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,32 +12,49 @@ namespace Application.Requests
     {
         public static async Task<Visit> ToPersistedData(this VisitRequest request)
         {
-            var geoCode = GoogleApi.GoogleMaps.LocationGeocode;
-            var places = await geoCode.QueryAsync(new LocationGeocodeRequest()
+            var placeId = request.PlaceId;
+            string placeName = null;
+            string address = null;
+            if (string.IsNullOrEmpty(placeId))
             {
-                Key = ApplicationConfig.GoogleKey,
-                Location = new GoogleApi.Entities.Common.Location()
+                var geoCode = GoogleApi.GoogleMaps.LocationGeocode;
+                var results = await geoCode.QueryAsync(new LocationGeocodeRequest()
                 {
-                    Latitude = request.Latitude,
-                    Longitude = request.Longitude,
-                },
-                LocationTypes = new GeometryLocationType[]
-                {
+                    Key = ApplicationConfig.GoogleKey,
+                    Location = new GoogleApi.Entities.Common.Location()
+                    {
+                        Latitude = request.Latitude,
+                        Longitude = request.Longitude,
+                    },
+                    LocationTypes = new GeometryLocationType[]
+                    {
                      GeometryLocationType.Approximate
+                    }
+                });
+
+                if (results != null && results.Results != null && results.Results.Count() > 0)
+                {
+                    var result = results.Results.FirstOrDefault();
+                    placeId = result.PlaceId;
+                    address = result.FormattedAddress;
                 }
-            });
-
-            var place = places.Results.FirstOrDefault();
-            string address = "";
-            string placeId = null;
-
-            // Place Id is misleading
-
-            if (place != null)
-            {
-                address = place.FormattedAddress;
-                placeId = place.PlaceId;
             }
+
+            if (!string.IsNullOrEmpty(placeId))
+            {
+                var response = await GoogleApi.GooglePlaces.Details.QueryAsync(new PlacesDetailsRequest()
+                {
+                    Key = ApplicationConfig.GoogleKey,
+                    PlaceId = placeId
+                });
+
+                if (response != null && response.Result != null)
+                {
+                    placeName = response.Result.Name;
+                    address = response.Result.FormattedAddress;
+                }
+            }
+
             return new Visit()
             {
                 UserId = request.UserId,
@@ -51,7 +68,8 @@ namespace Application.Requests
                 Latitude2Decimal = (double)Math.Round((decimal)request.Latitude, 2),
                 Longitude2Decimal = (double)Math.Round((decimal)request.Longitude, 2),
                 PlaceId = placeId,
-                Address = address,
+                PlaceName = placeName,
+                Address = address
             };
         }
     }
