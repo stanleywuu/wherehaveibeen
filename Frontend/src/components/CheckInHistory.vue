@@ -26,8 +26,13 @@
           </gmap-map>
         </b-col>
         <b-col md="6">
-          <b-card-body :title="loc.Address">
-            {{ dateFormatter(loc.CheckIn) }}
+          <b-card-body :title="loc.PlaceName">
+            <div class="bd-highlight">
+              {{ loc.Address }}
+            </div>
+            <div>
+              {{ dateFormatter(loc.CheckIn) }}
+            </div>
           </b-card-body>
         </b-col>
       </b-row>

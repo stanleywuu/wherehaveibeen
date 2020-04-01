@@ -139,6 +139,7 @@ export default {
     },
     clickedOnMap (e)
     {
+      this.currentPlace = { placeId: e.placeId, name: '', formatted_address: '' }
       this.center.lat = e.latLng.lat()
       this.center.lng = e.latLng.lng()
       //var mapObject = this.$refs.map.$mapObject;
@@ -146,10 +147,12 @@ export default {
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
+      const placeId = this.currentPlace && this.currentPlace.placeId
       let requestData = {
         "userId": this.$store.getters.getUserId,
         "latitude": this.center.lat,
         "longitude": this.center.lng,
+        "placeId": placeId || '',
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
       this.$http.post(
