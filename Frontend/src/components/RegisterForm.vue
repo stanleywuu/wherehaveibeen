@@ -126,7 +126,14 @@ export default {
     }
   },
   methods: {
-    /* I am NOT a fan of this */
+    /* I am NOT a fan of these */
+    clearFields () {
+      this.form.email = ''
+      this.form.emailVerify = ''
+      this.form.password = ''
+      this.form.passwordVerify = ''
+      this.form.privacyPolicy = false
+    },
     clearAlerts () {
       this.validationAlerts.emailNotMatch = false
       this.validationAlerts.emailNotUnique = false
@@ -148,7 +155,7 @@ export default {
         this.fieldStatus.password = false
         this.validationAlerts.passwordNotMatch = true
       }
-      else if (! this.form.privacyPolicy) {
+      else if (! this.form.privacyPolicy || this.form.privacyPolicy === 'false') {
         this.fieldStatus.policy = false
         this.validationAlerts.policyNotChecked = true
       }
@@ -161,6 +168,8 @@ export default {
         this.$http.post(this.api.endpoint + '/membership', requestData)
         .then(response => {
           this.api.responses.push(response)
+          this.clearFields()
+          this.clearAlerts()
           this.$emit('registrationComplete')
         })
         .catch(e => {
