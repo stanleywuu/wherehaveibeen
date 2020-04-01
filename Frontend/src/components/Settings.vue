@@ -18,7 +18,7 @@
         <p />
         But if you still want to, click away - there's nothing stopping you making a new one!
         <p />
-        <b-button disabled variant="outline-danger" @click="onAccountDelete()">Delete My Account</b-button>
+        <b-button variant="outline-danger" @click="onAccountDelete()">Delete My Account</b-button>
       </b-card-body>
     </b-card>
   </div>
@@ -98,6 +98,8 @@ export default {
             }
           )
           .then(response => {
+            this.$store.dispatch('storeUserAuth', undefined)
+            this.$store.dispatch('storeUserId', undefined)
             this.api.reponses.push(response)
           })
           .catch(e => {

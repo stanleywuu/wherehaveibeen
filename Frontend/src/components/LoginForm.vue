@@ -67,6 +67,10 @@ export default {
     }
   },
   methods: {
+    clearFields () {
+      this.form.email = '',
+      this.form.password = ''
+    },
     clearAlerts () {
       this.alerts.invalidCredentials = false
       this.fieldState.login = null
@@ -80,6 +84,8 @@ export default {
       }
       this.$http.post(this.api.endpoint + '/membership/login', requestData)
       .then(response => {
+        this.clearFields()
+        this.clearAlerts()
         this.$store.dispatch('storeUserAuth', response.data.token)
         this.$store.dispatch('storeUserId', response.data.userId)
       })
