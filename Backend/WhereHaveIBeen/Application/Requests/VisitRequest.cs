@@ -20,5 +20,9 @@ namespace Application.Requests
         public bool AtRisk { get; set; }
 
         public string PlaceId { get; set; }
+
+        public string PlaceName { get; set; }
+
+        public string Address { get; set; }
     }
 }
