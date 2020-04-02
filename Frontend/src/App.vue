@@ -52,23 +52,6 @@ export default {
     Confidentiality,
     Settings
   },
-  /* I'm going to comment this out so linter doesn't complain
-  created()
-  {
-      var token = this.$cookie.get('token');
-      var userId = this.$cookie.get("userId");
-      
-      if (token && userId)
-      {
-        // DOn't really know how this works
-        const tokenState = () => token;
-        const userIdState = () => userId;
-        
-        // I can't figure out how to set values in store
-        // this.$store.dispatch('token', tokenState)
-        // this.$store.dispatch('userId', userIdState)
-      }
-  },*/
   data () {
     return {
       showCheckin: true,
