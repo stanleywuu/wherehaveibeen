@@ -6,7 +6,13 @@
       placeholder="Search for a place"
       @place_changed="setPlace">
     </gmap-autocomplete>
-    <b-button v-show="!this.locatingUser" size="sm" class="ml-3" @click="geolocate()">Find Me</b-button>
+    <span id="disabled-btn-wrapper">
+      <b-button v-show="!this.locatingUser" :disabled="!this.hideGeolocateToolTip" size="sm" id="user-location-btn" class="ml-3" @click="geolocate()">Find Me</b-button>
+    </span>
+    <b-tooltip :disabled="this.hideGeolocateToolTip" target="disabled-btn-wrapper" placement="top">
+      Failed to find your location<br/>
+      Please check your Browser's permissions
+    </b-tooltip>
     <b-button disabled v-show="this.locatingUser" size="sm" class="ml-3"><b-spinner small></b-spinner></b-button>
     <p/>
     <div id="search-result" v-if="this.currentPlace">
@@ -103,11 +109,13 @@ export default {
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
       showSuccessAlert: false,
-      showFailureAlert: false
+      showFailureAlert: false,
+      hideGeolocateToolTip: true
     }
   },
   mounted () {
     this.geolocate()
+    this.timeoutGeoLocate()
   },
   methods: {
     formattedDate () {
@@ -128,6 +136,14 @@ export default {
       this.center.lat = this.currentPlace.geometry.location.lat()
       this.center.lng = this.currentPlace.geometry.location.lng()
 
+    },
+    timeoutGeoLocate () {
+      setTimeout(()=>{
+        if (this.locatingUser) {
+          this.locatingUser = false
+          this.hideGeolocateToolTip = false
+        }
+      }, 10000);
     },
     geolocate () {
       this.locatingUser = true
