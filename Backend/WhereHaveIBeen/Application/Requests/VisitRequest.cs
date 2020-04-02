@@ -19,6 +19,6 @@ namespace Application.Requests
 
         public bool AtRisk { get; set; }
 
-
+        public string PlaceId { get; set; }
     }
 }

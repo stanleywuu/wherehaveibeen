@@ -1,7 +1,5 @@
 ﻿using SQLite;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Data
 {
@@ -34,6 +32,8 @@ namespace Application.Data
 
         // If we could get a placeId from google place api
         public string PlaceId { get; set; }
+
+        public string PlaceName { get; set; }
 
         public bool AtRisk { get; set; }
     }
