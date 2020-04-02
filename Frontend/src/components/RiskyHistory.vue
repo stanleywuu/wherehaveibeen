@@ -1,13 +1,13 @@
 <template>
   <div id="danger-map-container">
-    <h2>Places carriers have been to</h2>
+    <h2>Locations carriers have been</h2>
     <gmap-autocomplete
       style="width:75%"
       placeholder="Search for a place"
       @place_changed="setPlace">
     </gmap-autocomplete>
     <span id="disabled-btn-wrapper">
-      <b-button v-show="!this.locatingUser" :disabled="!this.hideGeolocateToolTip" size="sm" id="user-location-btn" class="ml-3" @click="geolocate()">Find Me</b-button>
+      <b-button v-show="!this.locatingUser" :disabled="!this.hideGeolocateToolTip" size="sm" id="user-location-btn" class="ml-3" @click="timeoutGeoLocate()">Find Me</b-button>
     </span>
     <b-tooltip :disabled="this.hideGeolocateToolTip" target="disabled-btn-wrapper" placement="top">
       Failed to find your location<br/>
@@ -22,22 +22,23 @@
             <gmap-map
               :center="center"
               :zoom="zoomLevel"
-              ref ="map"
               @click="clickedOnMap"
               style="width:100%; height: 500px;">
               <gmap-marker
+                v-for="(marker, index) in coords"
                 :key="index"
-                v-for="(m, index) in coords"
                 :clickable="true"
-                :position="{lat: m.latitude, lng: m.longitude}"
-                @click="selectMarker(m)"
+                :position="{lat: marker.latitude, lng: marker.longitude}"
+                @click="marker.infoDisplayed=true"
               >
-              <gmap-info-window :opened = "true">
-                <li>CheckedIn:{{m.checkIn}}</li>
-                <li>CheckedOut:{{m.checkOut}}</li>
-                <li>{{m.address}}</li>
-                <p>{{m.placeName}}</p>
-            </gmap-info-window>
+                <gmap-info-window
+                  :opened="marker.infoDisplayed"
+                  @closeclick="marker.infoDisplayed=false">
+                  <p v-if="marker.placeName"><b>{{ marker.placeName }}</b></p>
+                  <li>{{ marker.address }}</li>
+                  <li>CheckedIn: {{ marker.checkIn }}</li>
+                  <li>CheckedOut: {{ marker.checkOut }}</li>
+                </gmap-info-window>
               </gmap-marker>
             </gmap-map>
           </b-col>
@@ -57,16 +58,13 @@ export default {
         responses: [],
         errors: []
       },
-      // Example defaults to Montreal
-      center: { lat: 45.508, lng: -73.587 },
+      center: { lat: 0, lng: 0 },
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
-      coords: null,
+      coords: [],
       hideGeolocateToolTip: true
     }
-  },
-  mounted () {
   },
   methods: {
     getPosition: function(marker) {
@@ -88,7 +86,7 @@ export default {
           this.locatingUser = false
           this.hideGeolocateToolTip = false
         }
-      }, 10000);
+      }, 10000)
     },
     geolocate () {
       this.locatingUser = true
@@ -106,31 +104,31 @@ export default {
       this.locatingUser = false
       })
     },
-    clickedOnMap (e)
-    {
+    clickedOnMap (e) {
       this.currentPlace = { placeId: e.placeId, name: '', formatted_address: '' }
       this.center.lat = e.latLng.lat()
       this.center.lng = e.latLng.lng()
       this.onGetCoords(this.center.lat, this.center.lng)
     },
-    selectMarker (m)
-    {
-     m.open = !m.open 
+    openInfoWindowTemplate (item) {
+      this.setInfoWindowTemplate(item)
+      this.infoWindow.position = this.getCoordinates(item)
+      this.infoWindow.open = true
     },
     onGetCoords(lat, lng) {
       this.$http.get(
-        this.api.endpoint + '/risk?lat={lat}&lng={lng}'.replace('{lat}', lat).replace('{lng}', lng)
+        this.api.endpoint + '/risk?lat=' + lat + '&lng=' + lng
       )
       .then(response => {
-        this.api.responses.push(response)
-        if (response && response.data)
-        {
-          this.coords = []
-          for (var i = 0; i < response.data.length;i++)
-          {
-            this.coords.push(response.data[i]);
-          }
+        if (response && response.data) {
+          this.coords.length = 0
+          response.data.forEach(checkin => {
+            checkin.infoDisplayed = true
+            this.coords.push(checkin)
+          })
         }
+        console.log('coords')
+        console.log(this.coords)
       })
       .catch(e => {
         this.showSuccessAlert = false

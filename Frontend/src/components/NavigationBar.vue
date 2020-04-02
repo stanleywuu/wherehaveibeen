@@ -5,7 +5,7 @@
       <b-navbar-nav class="ml-auto">
         <b-button id='covid-history-btn' class="ml-2 mr-2"
           @click="$emit('toggleDangerMap')">
-          {{ dangerMapDisplayed ? 'Hide' : 'Show' }} Danger Map
+          {{ dangerMapDisplayed ? 'Hide' : 'Show' }} Report Map
         </b-button>
         <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
           @click="$bvModal.show('covid-modal')"

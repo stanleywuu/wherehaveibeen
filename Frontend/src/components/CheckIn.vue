@@ -105,8 +105,7 @@ export default {
         responses: [],
         errors: []
       },
-      // Example defaults to Montreal
-      center: { lat: 45.508, lng: -73.587 },
+      center: { lat: 0, lng: 0 },
       zoomLevel: 12,
       currentPlace: null,
       locatingUser: false,
@@ -150,7 +149,7 @@ export default {
           this.locatingUser = false
           this.hideGeolocateToolTip = false
         }
-      }, 10000);
+      }, 10000)
     },
     geolocate () {
       this.locatingUser = true
