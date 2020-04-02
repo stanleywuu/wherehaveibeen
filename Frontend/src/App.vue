@@ -4,10 +4,11 @@
       :userLoggedIn="this.userLoggedIn"
       @displayCheckIn="displayCheckinForm()"
       @displayHistory="displayHistory()"
+      @displayRiskHistory="displayRiskHistory()"
       @displaySettings="displaySettings()">
     </NavigationBar>
-    <Welcome v-show="!this.userLoggedIn" />
-    <b-card no-body v-show="!this.userLoggedIn" id='user-auth-actons'>
+    <Welcome v-show="!this.userLoggedIn && !this.anonymous" />
+    <b-card no-body v-show="!this.userLoggedIn && !this.anonymous" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card' ref='loginTab'>
           <LoginForm></LoginForm>
@@ -22,6 +23,7 @@
     <Confidentiality v-show="!this.userLoggedIn" />
     <CheckIn v-show="this.userLoggedIn && this.showCheckin" class='authed-user' />
     <CheckInHistory v-show="this.userLoggedIn && this.showHistory" class='authed-user' />
+    <RiskyHistory v-show="this.showRiskyHistory" />
     <Settings v-show="this.userLoggedIn && this.showSettings" class='authed-user' />
   </div>
 </template>
@@ -35,6 +37,7 @@ import CheckInHistory from '@/components/CheckInHistory.vue'
 import Welcome from '@/components/Welcome.vue'
 import Confidentiality from '@/components/Confidentiality.vue'
 import Settings from '@/components/Settings.vue'
+import RiskyHistory from '@/components/RiskyHistory.vue'
 
 export default {
   name: 'App',
@@ -44,6 +47,7 @@ export default {
     RegisterForm,
     CheckIn,
     CheckInHistory,
+    RiskyHistory,
     Welcome,
     Confidentiality,
     Settings
@@ -69,7 +73,8 @@ export default {
     return {
       showCheckin: true,
       showHistory: false,
-      showSettings: false
+      showSettings: false,
+      anonymous: false
     }
   },
   computed: {
@@ -85,6 +90,7 @@ export default {
       this.showCheckin = false
       this.showHistory = false
       this.showSettings = false
+      this.showRiskyHistory = false
     },
     displayCheckinForm () {
       this.clearComponents()
@@ -93,6 +99,12 @@ export default {
     displayHistory () {
       this.clearComponents()
       this.showHistory = true
+    },
+    displayRiskHistory()
+    {
+        this.clearComponents()
+        this.showRiskyHistory = true
+        this.anonymous = !this.anonymous
     },
     displaySettings () {
       this.clearComponents()

@@ -3,6 +3,11 @@
     <b-navbar toggleable="lg" type="dark" variant="dark">
       <b-navbar-brand href='#' @click="$emit('displayCheckIn')">Where Have I Been?</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
+        <b-button id='covid-history-btn' class="ml-2 mr-2"
+          @click="$emit('displayRiskHistory')"
+        >
+        Show Danger Map
+        </b-button>
         <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
           @click="$bvModal.show('covid-modal')"
           v-show="userLoggedIn">
