@@ -6,7 +6,13 @@
       placeholder="Search for a place"
       @place_changed="setPlace">
     </gmap-autocomplete>
-    <b-button v-show="!this.locatingUser" size="sm" class="ml-3" @click="geolocate()">Find Me</b-button>
+    <span id="disabled-btn-wrapper">
+      <b-button v-show="!this.locatingUser" :disabled="!this.hideGeolocateToolTip" size="sm" id="user-location-btn" class="ml-3" @click="geolocate()">Find Me</b-button>
+    </span>
+    <b-tooltip :disabled="this.hideGeolocateToolTip" target="disabled-btn-wrapper" placement="top">
+      Failed to find your location<br/>
+      Please check your Browser's permissions
+    </b-tooltip>
     <b-button disabled v-show="this.locatingUser" size="sm" class="ml-3"><b-spinner small></b-spinner></b-button>
     <p/>
     <div id="search-result" v-if="this.currentPlace">
@@ -89,23 +95,6 @@
 export default {
   name: 'CheckIn',
   data () {
-      var place = null;
-      
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            ((pos)=> this.currentPlace = {
-                name: "Your location", lat: pos.coords.latitude, lng: pos.coords.longitude}
-                ),
-            (()=> this.currentPlace = {name:"Montreal", lat: 45.508, lng: -73.587 }),
-            {enableHighAccuracy: true,
-               timeout: 5000,
-               maximumAge: 0});
-      }
-      else
-      {
-          // example defaults to montreal
-          place = {name:"Montreal", lat: 45.508, lng: -73.587 }
-      }
     return {
       api: {
         endpoint: process.env.VUE_APP_API_URL,
@@ -115,13 +104,18 @@ export default {
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
-      currentPlace: place,
+      currentPlace: null,
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
       showSuccessAlert: false,
-      showFailureAlert: false
+      showFailureAlert: false,
+      hideGeolocateToolTip: true
     }
+  },
+  mounted () {
+    this.geolocate()
+    this.timeoutGeoLocate()
   },
   methods: {
     formattedDate () {
@@ -143,11 +137,24 @@ export default {
       this.center.lng = this.currentPlace.geometry.location.lng()
 
     },
+    timeoutGeoLocate () {
+      setTimeout(()=>{
+        if (this.locatingUser) {
+          this.locatingUser = false
+          this.hideGeolocateToolTip = false
+        }
+      }, 10000);
+    },
     geolocate () {
       this.locatingUser = true
       navigator.geolocation.getCurrentPosition(position => {
         this.zoomLevel = 12
         this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+        this.currentPlace = {
+          name: "Your location",
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
@@ -164,7 +171,7 @@ export default {
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
-      const placeId = this.currentPlace && this.currentPlace.placeId
+      let placeId = this.currentPlace && this.currentPlace.placeId
       let requestData = {
         "userId": this.$store.getters.getUserId,
         "latitude": this.center.lat,
