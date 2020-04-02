@@ -88,6 +88,14 @@ export default {
         this.clearAlerts()
         this.$store.dispatch('storeUserAuth', response.data.token)
         this.$store.dispatch('storeUserId', response.data.userId)
+        
+        let d = new Date();        
+         // one hour expiry for token
+         //https://stackoverflow.com/questions/50754590/how-to-set-cookie-in-vuejs
+        d.setTime(d.getTime() + (1*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        this.$cookie.set("token", response.data.token, expires)
+        this.$cookie.set("userId", response.data.userId, expires)
       })
       .catch(e => {
         this.alerts.invalidCredentials = true

@@ -47,6 +47,9 @@ export default {
       evt.preventDefault()
       this.$store.dispatch('storeUserAuth', undefined)
       this.$store.dispatch('storeUserId', undefined)
+      
+      this.$cookie.delete('token')
+      this.$cookie.delete('userId')
     },
     confirmReport() {
       this.$refs['covid-modal'].hide()

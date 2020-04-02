@@ -22,3 +22,4 @@ Frontend/node_modules/
 /Backend/WhereHaveIBeen/WhereHaveIBeen/.config/dotnet-tools.json
 /Backend/WhereHaveIBeen/WhereHaveIBeen/db.sqlite
 /Backend/WhereHaveIBeen/WhereHaveIBeen/appsettings.Development.json
+/Frontend/yarn.lock

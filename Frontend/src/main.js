@@ -18,6 +18,9 @@ Vue.use(VueGoogleMaps, {
     libraries: "places"
   }
 });
+var VueCookie = require('vue-cookie');
+// Tell Vue to use the plugin
+Vue.use(VueCookie);
 
 new Vue({
   store,

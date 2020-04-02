@@ -89,6 +89,23 @@
 export default {
   name: 'CheckIn',
   data () {
+      var place = null;
+      
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            ((pos)=> this.currentPlace = {
+                name: "Your location", lat: pos.coords.latitude, lng: pos.coords.longitude}
+                ),
+            (()=> this.currentPlace = {name:"Montreal", lat: 45.508, lng: -73.587 }),
+            {enableHighAccuracy: true,
+               timeout: 5000,
+               maximumAge: 0});
+      }
+      else
+      {
+          // example defaults to montreal
+          place = {name:"Montreal", lat: 45.508, lng: -73.587 }
+      }
     return {
       api: {
         endpoint: process.env.VUE_APP_API_URL,
@@ -98,7 +115,7 @@ export default {
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
-      currentPlace: null,
+      currentPlace: place,
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
