@@ -137,7 +137,11 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
-        this.currentPlace = 'userLocation'
+        this.currentPlace = {
+          name: "Your location",
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
       this.locatingUser = false
       })
     },
