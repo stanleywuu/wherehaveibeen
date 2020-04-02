@@ -26,11 +26,28 @@
           </gmap-map>
         </b-col>
         <b-col md="6">
-          <b-card-body :title="loc.PlaceName">
-            <div class="bd-highlight">
+          <b-card-body>
+            <b-row no-gutters>
+              <b-col class="history-text">
+                <h4>
+                  {{loc.PlaceName}}
+                </h4>
+              </b-col>
+              <b-col sm="3" class="risk-label">
+                <span v-if="loc.AtRisk" class="at-risk">
+                  <font-awesome-icon icon="biohazard" />
+                  At Risk
+                </span>
+                <span v-if="!loc.AtRisk">
+                  <font-awesome-icon icon="hand-sparkles" />
+                  Low Risk
+                </span>
+              </b-col>
+            </b-row>
+            <div class="history-text">
               {{ loc.Address }}
             </div>
-            <div>
+            <div class="history-text">
               {{ dateFormatter(loc.CheckIn) }}
             </div>
           </b-card-body>
@@ -39,6 +56,19 @@
     </b-card>
   </div>
 </template>
+
+<style>
+  .history-text {
+    text-align: left;
+  }
+  .risk-label {
+    display: flex;
+  }
+  .at-risk {
+    color: red;
+    font-weight: bold;
+  }
+</style>
 
 <script>
 export default {
