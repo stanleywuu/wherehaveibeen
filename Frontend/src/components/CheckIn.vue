@@ -64,10 +64,10 @@
               <div class="mb-auto bd-highlight">
                 <b-row id="long-lat-display">
                   <b-col md="6">
-                    <p>Latitude: {{center.lat}}</p>
+                    <p>Latitude: {{ center.lat }}</p>
                   </b-col>
                   <b-col md="6">
-                    <p>Longitude: {{center.lng}}</p>
+                    <p>Longitude: {{ center.lng }}</p>
                   </b-col>
                 </b-row>
               </div>
@@ -80,6 +80,8 @@
                     Failed to store this Check In.<br/>
                     Please refresh or try again later
                   </b-alert>
+                </b-row>
+                <b-row id="submit-btn" class="align-self-end">
                   <b-button @click="onCheckInSubmit()">Check In Here</b-button>
                 </b-row>
               </div>
@@ -222,13 +224,13 @@ export default {
 .form-group {
   text-align: left !important;
 }
-.bd-highlight, .card-title, #submit-alert {
+.bd-highlight, .card-title, #submit-alert, #submit-btn {
   width: 100%;
   text-align: center;
   justify-content: center;
   padding-bottom: 10px;
 }
-#submit-alert {
+#submit-alert, #submit-btn {
   padding-left:25px;
 }
 </style>
