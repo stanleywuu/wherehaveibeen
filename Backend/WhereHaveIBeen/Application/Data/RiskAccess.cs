@@ -38,8 +38,8 @@ namespace Application.Data
             var visits = await conn.QueryAsync<Visit>(@"select v1.*
 from visit v1
 inner join visit v2
-    ON v2.latitude2Decimal = v1.latitude2Decimal
-    AND v2.longitude2Decimal = v1.longitude2Decimal
+    ON v2.latitudeRounded = v1.latitudeRounded
+    AND v2.longitudeRounded = v1.longitudeRounded
     AND v1.userid <> v2.userid
     AND v2.AtRisk = 1
 WHERE v2.userId = ?

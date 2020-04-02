@@ -33,8 +33,8 @@ select v1.VisitId, v1.CheckIn, v1.CheckOut as CheckOut, v1.Address as Address, v
 v2.CheckIn as CheckIn2, v2.CheckOut as CheckOut2, v2.Address as Address2, v2.Latitude as Latitude2, v2.Longitude as Longitude2
 from visit v1 
 inner join visit v2 
-    ON v2.latitude2Decimal = v1.latitude2Decimal
-    AND v2.longitude2Decimal = v1.longitude2Decimal
+    ON v2.latitudeRounded = v1.latitudeRounded
+    AND v2.longitudeRounded = v1.longitudeRounded
     AND v2.userid <> v1.userid
     AND v2.AtRisk = 1
 where v1.userid = ?
