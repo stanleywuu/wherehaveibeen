@@ -136,7 +136,6 @@ export default {
       }
     },
     setPlace (place) {
-      console.log('== setPlace', place);
       this.currentPlace = place
       this.zoomLevel = 16
       this.center.lat = this.currentPlace.geometry.location.lat()
@@ -175,16 +174,10 @@ export default {
         this.$refs.map.$mapPromise.then(map => {
           const request = {placeId: e.placeId, fields: ['place_id', 'name', 'formatted_address']}
           const service = new this.google.maps.places.PlacesService(map);
-          service.getDetails(request, (place, status) => {
-            console.log('== got place:', place);
-            console.log('== got status:', status);
-            this.currentPlace = place;
-          });
+          service.getDetails(request, (place) => this.currentPlace = place);
         })
       } else {
-        console.log('== No Place.');
-        this.currentPlace = {
-        }
+        this.currentPlace = {}
       }
     },
     onCheckInSubmit () {
