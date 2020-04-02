@@ -92,6 +92,8 @@
 </template>
 
 <script>
+import { gmapApi } from 'vue2-google-maps'
+
 export default {
   name: 'CheckIn',
   data () {
@@ -116,6 +118,9 @@ export default {
   mounted () {
     this.geolocate()
     this.timeoutGeoLocate()
+  },
+  computed: {
+    google: gmapApi
   },
   methods: {
     formattedDate () {
@@ -163,20 +168,30 @@ export default {
     },
     clickedOnMap (e)
     {
-      this.currentPlace = { placeId: e.placeId, name: '', formatted_address: '' }
       this.center.lat = e.latLng.lat()
       this.center.lng = e.latLng.lng()
-      //var mapObject = this.$refs.map.$mapObject;
-      //google.maps.event.trigger(mapObject,
+      if (e.placeId) {
+        this.$refs.map.$mapPromise.then(map => {
+          const request = {placeId: e.placeId, fields: ['place_id', 'name', 'formatted_address']}
+          const service = new this.google.maps.places.PlacesService(map);
+          service.getDetails(request, (place) => this.currentPlace = place);
+        })
+      } else {
+        this.currentPlace = {}
+      }
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
-      let placeId = this.currentPlace && this.currentPlace.placeId
+      let placeId = this.currentPlace && this.currentPlace.place_id
+      let placeName = this.currentPlace && this.currentPlace.name
+      let address = this.currentPlace && this.currentPlace.formatted_address
       let requestData = {
         "userId": this.$store.getters.getUserId,
         "latitude": this.center.lat,
         "longitude": this.center.lng,
         "placeId": placeId || '',
+        "placeName": placeName || '',
+        "address": address || '',
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
       this.$http.post(

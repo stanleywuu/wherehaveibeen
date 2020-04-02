@@ -1,7 +1,6 @@
 ﻿using Application.Data;
 using GoogleApi.Entities.Maps.Geocoding.Common.Enums;
 using GoogleApi.Entities.Maps.Geocoding.Location.Request;
-using GoogleApi.Entities.Places.Details.Request;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,8 +12,8 @@ namespace Application.Requests
         public static async Task<Visit> ToPersistedData(this VisitRequest request)
         {
             var placeId = request.PlaceId;
-            string placeName = null;
-            string address = null;
+            string placeName = request.PlaceName;
+            string address = request.Address;
             if (string.IsNullOrEmpty(placeId))
             {
                 var geoCode = GoogleApi.GoogleMaps.LocationGeocode;
@@ -37,21 +36,6 @@ namespace Application.Requests
                     var result = results.Results.FirstOrDefault();
                     placeId = result.PlaceId;
                     address = result.FormattedAddress;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(placeId))
-            {
-                var response = await GoogleApi.GooglePlaces.Details.QueryAsync(new PlacesDetailsRequest()
-                {
-                    Key = ApplicationConfig.GoogleKey,
-                    PlaceId = placeId
-                });
-
-                if (response != null && response.Result != null)
-                {
-                    placeName = response.Result.Name;
-                    address = response.Result.FormattedAddress;
                 }
             }
 
