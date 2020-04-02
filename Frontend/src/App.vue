@@ -2,28 +2,27 @@
   <div id="app">
     <NavigationBar
       :userLoggedIn="this.userLoggedIn"
+      :dangerMapDisplayed="this.showDangerMap"
       @displayCheckIn="displayCheckinForm()"
       @displayHistory="displayHistory()"
-      @displayRiskHistory="displayRiskHistory()"
+      @toggleDangerMap="toggleDangerMap()"
       @displaySettings="displaySettings()">
     </NavigationBar>
-    <Welcome v-show="!this.userLoggedIn && !this.anonymous" />
-    <b-card no-body v-show="!this.userLoggedIn && !this.anonymous" id='user-auth-actons'>
+    <Welcome v-show="!this.userLoggedIn && !this.showDangerMap" />
+    <b-card no-body v-show="!this.userLoggedIn && !this.showDangerMap" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card' ref='loginTab'>
-          <LoginForm></LoginForm>
+          <LoginForm />
         </b-tab>
         <b-tab title='Register' id='register-form-card'>
-          <RegisterForm
-           @registrationComplete="registrationComplete()">
-          </RegisterForm>
+          <RegisterForm @registrationComplete="registrationComplete()" />
         </b-tab>
       </b-tabs>
     </b-card>
-    <Confidentiality v-show="!this.userLoggedIn" />
+    <Confidentiality v-show="!this.userLoggedIn && !this.showDangerMap" />
     <CheckIn v-show="this.userLoggedIn && this.showCheckin" class='authed-user' />
     <CheckInHistory v-show="this.userLoggedIn && this.showHistory" class='authed-user' />
-    <RiskyHistory v-show="this.showRiskyHistory" />
+    <RiskyHistory v-show="this.showDangerMap" class='authed-user' />
     <Settings v-show="this.userLoggedIn && this.showSettings" class='authed-user' />
   </div>
 </template>
@@ -57,7 +56,7 @@ export default {
       showCheckin: true,
       showHistory: false,
       showSettings: false,
-      anonymous: false
+      showDangerMap: false
     }
   },
   computed: {
@@ -73,7 +72,6 @@ export default {
       this.showCheckin = false
       this.showHistory = false
       this.showSettings = false
-      this.showRiskyHistory = false
     },
     displayCheckinForm () {
       this.clearComponents()
@@ -83,11 +81,10 @@ export default {
       this.clearComponents()
       this.showHistory = true
     },
-    displayRiskHistory()
-    {
-        this.clearComponents()
-        this.showRiskyHistory = true
-        this.anonymous = !this.anonymous
+    toggleDangerMap () {
+      this.clearComponents()
+      this.showDangerMap = !this.showDangerMap
+      this.showCheckin = !this.showDangerMap
     },
     displaySettings () {
       this.clearComponents()

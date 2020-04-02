@@ -4,9 +4,8 @@
       <b-navbar-brand href='#' @click="$emit('displayCheckIn')">Where Have I Been?</b-navbar-brand>
       <b-navbar-nav class="ml-auto">
         <b-button id='covid-history-btn' class="ml-2 mr-2"
-          @click="$emit('displayRiskHistory')"
-        >
-        Show Danger Map
+          @click="$emit('toggleDangerMap')">
+          {{ dangerMapDisplayed ? 'Hide' : 'Show' }} Danger Map
         </b-button>
         <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
           @click="$bvModal.show('covid-modal')"
@@ -37,7 +36,7 @@ export default {
   components :{
     CovidModal
   },
-  props: ['userLoggedIn'],
+  props: ['userLoggedIn', 'dangerMapDisplayed'],
   data () {
     return {
       api: {

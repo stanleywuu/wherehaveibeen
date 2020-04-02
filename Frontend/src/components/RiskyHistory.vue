@@ -1,8 +1,8 @@
 <template>
-  <div id="check-in-container">
+  <div id="danger-map-container">
     <h2>Places carriers have been to</h2>
     <gmap-autocomplete
-      style="width:90%"
+      style="width:75%"
       placeholder="Search for a place"
       @place_changed="setPlace">
     </gmap-autocomplete>
