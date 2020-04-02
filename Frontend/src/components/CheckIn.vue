@@ -89,23 +89,6 @@
 export default {
   name: 'CheckIn',
   data () {
-      var place = null;
-      
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            ((pos)=> this.currentPlace = {
-                name: "Your location", lat: pos.coords.latitude, lng: pos.coords.longitude}
-                ),
-            (()=> this.currentPlace = {name:"Montreal", lat: 45.508, lng: -73.587 }),
-            {enableHighAccuracy: true,
-               timeout: 5000,
-               maximumAge: 0});
-      }
-      else
-      {
-          // example defaults to montreal
-          place = {name:"Montreal", lat: 45.508, lng: -73.587 }
-      }
     return {
       api: {
         endpoint: process.env.VUE_APP_API_URL,
@@ -115,13 +98,16 @@ export default {
       // Example defaults to Montreal
       center: { lat: 45.508, lng: -73.587 },
       zoomLevel: 12,
-      currentPlace: place,
+      currentPlace: null,
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
       showSuccessAlert: false,
       showFailureAlert: false
     }
+  },
+  mounted () {
+    this.geolocate()
   },
   methods: {
     formattedDate () {
@@ -151,6 +137,7 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
+        this.currentPlace = 'userLocation'
       this.locatingUser = false
       })
     },
@@ -164,7 +151,7 @@ export default {
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
-      const placeId = this.currentPlace && this.currentPlace.placeId
+      let placeId = this.currentPlace && this.currentPlace.placeId
       let requestData = {
         "userId": this.$store.getters.getUserId,
         "latitude": this.center.lat,
