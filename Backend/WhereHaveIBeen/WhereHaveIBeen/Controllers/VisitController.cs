@@ -29,11 +29,11 @@ namespace WhereHaveIBeen.Controllers
         {
             // TODO: Make sure userId IS current user
             var conn = ContextProvider.Conn;
-            var users = await conn.Table<Visit>().Where(v => v.UserId == userId).ToListAsync();
+            var response = await VisitAccess.GetVisitResponseFor(userId);
 
             StringBuilder sb = new StringBuilder();
 
-            var text = JsonConvert.SerializeObject(users);
+            var text = JsonConvert.SerializeObject(response);
 
             var result = new OkObjectResult(text);
             return result;
@@ -44,7 +44,11 @@ namespace WhereHaveIBeen.Controllers
         public async Task<ActionResult<string>> Create([FromBody]VisitRequest request)
         {
             var conn = ContextProvider.Conn;
-            await conn.InsertAsync(await request.ToPersistedData());
+            var user = await conn.GetAsync<User>(request.UserId);
+            var entity = await request.ToPersistedData();
+            entity.AtRisk = user.AtRisk;
+
+            await conn.InsertAsync(entity);
 
             return new OkObjectResult("Visit has been logged");
         }
