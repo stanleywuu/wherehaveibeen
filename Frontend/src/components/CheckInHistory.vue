@@ -44,12 +44,8 @@
                 <span v-if="loc.AtRisk" class="at-risk">
                   <font-awesome-icon icon="biohazard" /> At Risk
                 </span>
-                <span class="risky" v-if="!loc.AtRisk && loc.RiskyInteractions > 0">
+                <span class="risky" v-if="potentialRisk(loc)">
                   <font-awesome-icon icon="virus" /> Potential Risk
-                  <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1"
-                    @click="getDetails(loc)">
-                    {{ loc.RiskyInteractions }} risky encounters
-                  </b-button>
                 </span>
                 <span v-if="!loc.AtRisk && loc.RiskyInteractions == 0">
                   <font-awesome-icon icon="hand-sparkles" /> Low Risk
@@ -58,6 +54,14 @@
             </b-row>
             <div class="history-text">{{ loc.Address }}</div>
             <div class="history-text">{{ dateFormatter(loc.CheckIn) }}</div>
+            <div v-if="potentialRisk(loc)" class="d-flex flex-column align-content-end">
+              <div class="d-flex flex-row-reverse">
+                <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1"
+                          @click="getDetails(loc)">
+                  Show {{ loc.RiskyInteractions }} risky encounter{{ loc.RiskyInteractions > 1 ? 's' : ''}}
+                </b-button>
+              </div>
+            </div>
           </b-card-body>
         </b-col>
       </b-row>
@@ -130,6 +134,9 @@ export default {
         .catch(e => {
           this.api.errors.push(e)
         })
+    },
+    potentialRisk (location) {
+      return !location.AtRisk && location.RiskyInteractions > 0
     }
   }
 }
