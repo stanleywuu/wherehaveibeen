@@ -32,7 +32,7 @@
               <p>Checked out: {{ dateFormatter(detail.checkOut) }}</p>
               <p>{{ detail.distanceInKm }} KM</p>
             </span>
-            </div> 
+            </div>
         </b-col>
         <b-col md="6">
           <b-card-body>
@@ -45,8 +45,8 @@
                   <font-awesome-icon icon="biohazard" /> At Risk
                 </span>
                 <span class="risky" v-if="!loc.AtRisk && loc.RiskyInteractions > 0">
-                  <font-awesome-icon icon="hand-sparkles" /> Potential Risk 
-                  <b-button id='covid-interaction-btn' class="ml-1 mr-1"
+                  <font-awesome-icon icon="virus" /> Potential Risk
+                  <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1"
                     @click="getDetails(loc)">
                     {{ loc.RiskyInteractions }} risky encounters
                   </b-button>
