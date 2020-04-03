@@ -24,15 +24,6 @@
               :position="findCenter(loc)"
             ></gmap-marker>
           </gmap-map>
-          <div class="risky-text" v-if="loc.hasDetail">
-            <span v-for="detail in loc.details"
-              :key="detail.VisitId">
-              <p>Someone with symptoms was here at:</p>
-              <p>Checked in: {{ dateFormatter(detail.checkIn) }}</p>
-              <p>Checked out: {{ dateFormatter(detail.checkOut) }}</p>
-              <p>{{ detail.distanceInKm }} KM</p>
-            </span>
-            </div>
         </b-col>
         <b-col md="6">
           <b-card-body>
@@ -47,7 +38,7 @@
                 <span class="risky" v-if="potentialRisk(loc)">
                   <font-awesome-icon icon="virus" /> Potential Risk
                 </span>
-                <span v-if="!loc.AtRisk && loc.RiskyInteractions == 0">
+                <span v-if="!loc.AtRisk && loc.RiskyInteractions === 0">
                   <font-awesome-icon icon="hand-sparkles" /> Low Risk
                 </span>
               </b-col>
@@ -57,10 +48,19 @@
             <div v-if="potentialRisk(loc)" class="d-flex flex-column align-content-end">
               <div class="d-flex flex-row-reverse">
                 <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1"
-                          @click="getDetails(loc)">
-                  Show {{ loc.RiskyInteractions }} risky encounter{{ loc.RiskyInteractions > 1 ? 's' : ''}}
+                          @click="toggleShowRiskyEncounters(loc)">
+                  {{ loc.showRiskyEncounters ? 'Hide' : 'Show' }} {{ loc.RiskyInteractions }} risky encounter{{ loc.RiskyInteractions > 1 ? 's' : ''}}
                 </b-button>
               </div>
+            </div>
+            <div class="risky-text" v-if="loc.showRiskyEncounters">
+              <span v-for="detail in loc.details"
+                    :key="detail.VisitId">
+                <div class="label">Someone with symptoms was here at:</div>
+                <div class="text"><div class="label">Checked in:</div>{{ dateFormatter(detail.checkIn) }}</div>
+                <div class="text"><div class="label">Checked out:</div>{{ dateFormatter(detail.checkOut) }}</div>
+                <div class="text">{{ formatDistance(detail) }}</div>
+              </span>
             </div>
           </b-card-body>
         </b-col>
@@ -118,16 +118,12 @@ export default {
       return new Date(Date.parse(datetime))
     },
     getDetails (loc) {
-      if (loc.hasDetail) {
-        this.$set(loc, 'hasDetail', !loc.hasDetail)
-      }
       if (loc.data && loc.data.length > 0) {
         return //already have data
       }
       this.$http.get(this.api.endpoint + '/visit/risk?visitId=' + loc.VisitId)
         .then(response => {
           if (response.data && response.data.length > 0) {
-            loc.hasDetail = true
             this.$set(loc, 'details', response.data)
           }
         })
@@ -135,8 +131,17 @@ export default {
           this.api.errors.push(e)
         })
     },
+    toggleShowRiskyEncounters (loc) {
+      const isShown = !loc.showRiskyEncounters
+      this.$set(loc, 'showRiskyEncounters', isShown)
+      if (!isShown) return
+      this.getDetails(loc)
+    },
     potentialRisk (location) {
       return !location.AtRisk && location.RiskyInteractions > 0
+    },
+    formatDistance (detail) {
+      return detail.distanceInKm > 0 ? `Approximately ${detail.distanceInKm}km away` : '';
     }
   }
 }
@@ -149,11 +154,24 @@ export default {
   .risk-label {
     display: flex;
   }
-  .risky-text p
+  .risky-text .text
   {
     text-align:left;
+    font-size: smaller;
+    font-weight: lighter;
     margin-top:2pt;
     margin-bottom:2px;
+  }
+  .risky-text .label {
+    text-align: left;
+    font-size: smaller;
+  }
+  .risky-text .text .label {
+    display: inline-block;
+    text-align: right;
+    min-width: 80px;
+    margin-right: 8px;
+    font-weight: bold;
   }
   .at-risk {
     color: red;
