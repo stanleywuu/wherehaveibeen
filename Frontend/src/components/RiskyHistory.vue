@@ -1,6 +1,6 @@
 <template>
   <div id="danger-map-container">
-    <h2>Locations carriers have been</h2>
+    <h2>Locations at risk</h2>
     <gmap-autocomplete
       style="width:75%"
       placeholder="Search for a place"
