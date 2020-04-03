@@ -53,12 +53,12 @@ namespace WhereHaveIBeen.Controllers
             {
                 var riskyVisit = new RiskyVisitResponse()
                 {
-                    VisitId = visit.VisitId,
-                    Address = visit.Address,
-                    CheckIn = visit.CheckIn,
-                    CheckOut = visit.CheckOut.GetValueOrDefault(visit.CheckIn),
-                    Latitude = visit.Latitude,
-                    Longitude = visit.Longitude,
+                    VisitId = item.VisitId,
+                    Address = item.Address,
+                    CheckIn = item.CheckIn,
+                    CheckOut = item.CheckOut.GetValueOrDefault(item.CheckIn),
+                    Latitude = item.Latitude,
+                    Longitude = item.Longitude,
                     DistanceInKm =
                     Convert.ToInt32(GPSExtensions.GetDistance(visit.Longitude, visit.Latitude, item.Longitude, item.Latitude) / 1000)
                 };

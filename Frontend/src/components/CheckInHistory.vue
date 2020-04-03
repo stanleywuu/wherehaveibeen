@@ -24,6 +24,15 @@
               :position="findCenter(loc)"
             ></gmap-marker>
           </gmap-map>
+          <div class="risky-text" v-if="loc.hasDetail">
+            <span v-for="detail in loc.details"
+              :key="detail.VisitId">
+              <p>Someone with symptoms was here at:</p>
+              <p>Checked in: {{dateFormatter(detail.checkIn)}}</p>
+              <p>Checked out: {{dateFormatter(detail.checkOut)}}</p>
+              <p>{{detail.distanceInKm}} KM</p>
+            </span>
+            </div> 
         </b-col>
         <b-col md="6">
           <b-card-body>
@@ -45,12 +54,7 @@
                     @click="getDetails(loc)">
                     {{loc.RiskyInteractions}} risky Encounters
                   </b-button>
-                  <span v-for="detail in loc.details"
-                  :key="detail.VisitId"> 
-                  <li>Checked in: {{detail.checkin}}</li>
-                  <li>Checked out: {{detail.checkOut}}
-                  <li>{{distanceInKm}} km</li>
-                  </span>
+                  
                 </span>
                 <span v-if="!loc.AtRisk && loc.RiskyInteractions == 0">
                   <font-awesome-icon icon="hand-sparkles" />
@@ -77,6 +81,12 @@
   }
   .risk-label {
     display: flex;
+  }
+  .risky-text p
+  {
+    text-align:left;
+    margin-top:2pt;
+    margin-bottom:2px;
   }
   .at-risk {
     color: red;
@@ -139,13 +149,22 @@ export default {
     },
     getDetails(loc)
     {
+      if (loc.hasDetail)
+      {
+        this.$set(loc, 'hasDetail', !loc.hasDetail);
+      }
+
+      if (loc.data && loc.data.length > 0)
+      {
+        return; //already have data
+      }
+
       this.$http.get(this.api.endpoint + '/visit/risk?visitId=' + loc.VisitId)
         .then(response => {
           if (response.data && response.data.length > 0)
           {
             loc.hasDetail = true
-            loc.details = []
-            loc.details = response.data
+            this.$set(loc, 'details', response.data)
           }
         })
         .catch(e => {
