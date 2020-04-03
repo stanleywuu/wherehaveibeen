@@ -54,11 +54,16 @@ export default {
     },
     confirmReport() {
       this.$refs['covid-modal'].hide()
+      let userToken = this.$store.getters.getUserToken
       let requestData = {
         userId: this.$store.getters.getUserId,
         IsAtRisk: true
       }
-      this.$http.post(this.api.endpoint + '/membership/corona', requestData)
+      this.$http.post(this.api.endpoint + '/membership/corona', requestData,
+          {
+            headers: {
+            Authorization: "Bearer " + userToken
+          }})
       .then(response => {
         this.api.responses.push(response)
       })
