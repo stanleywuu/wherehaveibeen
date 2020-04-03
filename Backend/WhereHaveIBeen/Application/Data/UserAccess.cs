@@ -39,7 +39,8 @@ inner join visit v2
     AND v2.AtRisk = 1
 where v1.userid = ?
 AND v1.CheckIn > ?
-AND (v2.CheckIn >= v1.CheckIn AND V2.CheckOut <= v1.CheckOut)
+AND ((v2.CheckIn >= v1.CheckIn AND V2.CheckIn <= v1.CheckOut) OR
+     (v2.CheckIn <= v1.CheckIn AND v2.CheckOut >= v1.CheckIn))
 ", userId, startDate.Ticks);
             return result;
         }

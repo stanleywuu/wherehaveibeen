@@ -44,11 +44,35 @@ inner join visit v2
     AND v2.AtRisk = 1
 WHERE v2.userId = ?
 AND v2.CheckIn > ?
-AND (v2.CheckIn >= v1.CheckIn AND V2.CheckOut <= v1.CheckOut)",
+AND ((v2.CheckIn >= v1.CheckIn AND V2.CheckIn <= v1.CheckOut) OR
+     (v2.CheckIn <= v1.CheckIn AND v2.CheckOut >= v1.CheckIn))",
 userId, startDate.Ticks);
 
             return (visits != null && visits.Any()) ? visits.Select(v => v.UserId).Distinct().ToList() :
                 new List<int>();
+        }
+
+        public static async Task<IList<Visit>> GetRiskyVisitsFor(Visit visit)
+        {
+            var conn = ContextProvider.Conn;
+            var visits = await conn.QueryAsync<Visit>
+                (@"
+select * from Visit
+where AtRisk = 1 and UserId != ?
+and latituderounded = ? and longituderounded = ?
+and
+((checkin <= ? AND checkout >= ?) OR
+(checkin >= ? AND checkIn <= ?))
+",
+// Visit = target visit
+// so if a risky visit happened before user checked in and left after the user checked out
+// or (if a risky visit happened after user checked in, but before user checked out)
+// then it's risky
+visit.UserId, visit.LatitudeRounded, visit.LongitudeRounded,
+visit.CheckIn.Ticks, visit.CheckIn.Ticks,
+visit.CheckIn.Ticks, visit.CheckOut.Value.Ticks
+                );
+            return visits;
         }
 
         public static async Task<bool> IsPersonAtRisk(int userId)
@@ -57,5 +81,6 @@ userId, startDate.Ticks);
             var query = conn.Table<PersonAtRisk>().Where(p => p.UserId == userId & p.SeenNotification == null);
             return await query.CountAsync() > 0;
         }
+
     }
 }

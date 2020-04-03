@@ -126,6 +126,7 @@ namespace WhereHaveIBeen.Controllers
         }
 
         [HttpPost("corona")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult> MarkAsPositive([FromBody] UserAtRiskRequest request)
         {
             var userId = request.UserId;
@@ -133,11 +134,11 @@ namespace WhereHaveIBeen.Controllers
             User user = null;
 
             // You can only mark yourself as having corona
-            /*if (UserUtilities.GetUserId(httpContextAccessor.HttpContext.User) != userId)
+            if (UserUtilities.GetUserId(httpContextAccessor.HttpContext.User) != userId)
             {
                 return Unauthorized();
             }
-            */
+
             try
             {
                 user = await conn.GetAsync<User>(userId);

@@ -24,6 +24,15 @@
               :position="findCenter(loc)"
             ></gmap-marker>
           </gmap-map>
+          <div class="risky-text" v-if="loc.hasDetail">
+            <span v-for="detail in loc.details"
+              :key="detail.VisitId">
+              <p>Someone with symptoms was here at:</p>
+              <p>Checked in: {{dateFormatter(detail.checkIn)}}</p>
+              <p>Checked out: {{dateFormatter(detail.checkOut)}}</p>
+              <p>{{detail.distanceInKm}} KM</p>
+            </span>
+            </div> 
         </b-col>
         <b-col md="6">
           <b-card-body>
@@ -38,7 +47,16 @@
                   <font-awesome-icon icon="biohazard" />
                   At Risk
                 </span>
-                <span v-if="!loc.AtRisk">
+                <span class="risky" v-if="!loc.AtRisk && loc.RiskyInteractions > 0">
+                  <font-awesome-icon icon="hand-sparkles" />
+                  Potential Risk 
+                  <b-button id='covid-interaction-btn' class="ml-1 mr-1"
+                    @click="getDetails(loc)">
+                    {{loc.RiskyInteractions}} risky Encounters
+                  </b-button>
+                  
+                </span>
+                <span v-if="!loc.AtRisk && loc.RiskyInteractions == 0">
                   <font-awesome-icon icon="hand-sparkles" />
                   Low Risk
                 </span>
@@ -64,8 +82,18 @@
   .risk-label {
     display: flex;
   }
+  .risky-text p
+  {
+    text-align:left;
+    margin-top:2pt;
+    margin-bottom:2px;
+  }
   .at-risk {
     color: red;
+    font-weight: bold;
+  }
+  .risky {
+    color:teal;
     font-weight: bold;
   }
 </style>
@@ -118,6 +146,30 @@ export default {
     dateFormatter (datetime) {
       let epoch = new Date(Date.parse(datetime))
       return epoch
+    },
+    getDetails(loc)
+    {
+      if (loc.hasDetail)
+      {
+        this.$set(loc, 'hasDetail', !loc.hasDetail);
+      }
+
+      if (loc.data && loc.data.length > 0)
+      {
+        return; //already have data
+      }
+
+      this.$http.get(this.api.endpoint + '/visit/risk?visitId=' + loc.VisitId)
+        .then(response => {
+          if (response.data && response.data.length > 0)
+          {
+            loc.hasDetail = true
+            this.$set(loc, 'details', response.data)
+          }
+        })
+        .catch(e => {
+          this.api.errors.push(e)
+        })
     }
   }
 }

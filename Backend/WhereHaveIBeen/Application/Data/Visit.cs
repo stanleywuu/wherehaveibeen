@@ -36,5 +36,7 @@ namespace Application.Data
         public string PlaceName { get; set; }
 
         public bool AtRisk { get; set; }
+
+        public bool CouldBeRisky { get; set; }
     }
 }
