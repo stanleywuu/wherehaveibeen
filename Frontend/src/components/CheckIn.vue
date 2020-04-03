@@ -61,16 +61,6 @@
                   </b-col>
                 </b-row>
               </div>
-              <div class="mb-auto bd-highlight">
-                <b-row id="long-lat-display">
-                  <b-col md="6">
-                    <p>Latitude: {{ center.lat }}</p>
-                  </b-col>
-                  <b-col md="6">
-                    <p>Longitude: {{ center.lng }}</p>
-                  </b-col>
-                </b-row>
-              </div>
               <div class="bd-highlight">
                 <b-row id="submit-alert" class="align-self-end">
                   <b-alert dismissible variant="success" v-model="showSuccessAlert">

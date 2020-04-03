@@ -14,8 +14,8 @@
     </b-alert>
     <b-form @submit="onRegisterSubmit">
       <b-container fluid>
-        <b-row class="my-1">
-          <b-col cols="6">
+        <b-row>
+          <b-col col cols="12" sm="12" md="12" lg="6" xl="6">
             <b-form-group
               id="new-email-input-group"
               label="Email Address:"
@@ -30,7 +30,7 @@
               </b-form-input>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col col cols="12" sm="12" md="12" lg="6" xl="6">
             <b-form-group
               id="email-validate-input-group"
               label="Verify Email Address:"
@@ -45,8 +45,8 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="my-1">
-          <b-col cols="6">
+        <b-row>
+          <b-col col cols="12" sm="12" md="12" lg="6" xl="6">
             <b-form-group
               id="new-password-input-group"
               label="Password:"
@@ -61,7 +61,7 @@
               </b-form-input>
             </b-form-group>
           </b-col>
-          <b-col cols="6">
+          <b-col col cols="12" sm="12" md="12" lg="6" xl="6">
             <b-form-group
               id="password-validate-input-group"
               label="Verify Password:"
@@ -76,7 +76,7 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="my-1">
+        <b-row>
           <b-col cols="12">
             <b-form-checkbox
               id="priv-pol-check"

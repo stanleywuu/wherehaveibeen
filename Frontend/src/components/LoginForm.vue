@@ -5,7 +5,7 @@
     </b-alert>
     <b-form @submit="onLoginSubmit">
       <b-container fluid>
-        <b-row class="my-1">
+        <b-row>
           <b-col cols="12">
             <b-form-group
               id="email-input-group"
@@ -22,7 +22,7 @@
             </b-form-group>
           </b-col>
         </b-row>
-        <b-row class="my-1">
+        <b-row>
           <b-col cols="12">
             <b-form-group
               id="password-input-group"
