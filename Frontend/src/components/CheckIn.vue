@@ -38,7 +38,7 @@
               <div class="bd-highlight">
                 {{ this.currentPlace['formatted_address'] }}
               </div>
-              <div class="bd-highlight">
+              <div class="mb-auto bd-highlight">
                 <b-row id="datetime-pickers">
                   <b-col md="6">
                     <b-form-datepicker
@@ -220,6 +220,6 @@ export default {
   padding-bottom: 10px;
 }
 #submit-alert, #submit-btn {
-  padding-left:25px;
+  padding-left: 25px;
 }
 </style>
