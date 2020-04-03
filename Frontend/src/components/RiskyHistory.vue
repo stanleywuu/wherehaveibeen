@@ -36,8 +36,8 @@
                   @closeclick="marker.infoDisplayed=false">
                   <p v-if="marker.placeName"><b>{{ marker.placeName }}</b></p>
                   <li>{{ marker.address }}</li>
-                  <li>CheckedIn: {{ marker.checkIn }}</li>
-                  <li>CheckedOut: {{ marker.checkOut }}</li>
+                  <li>Checked In: {{ marker.checkIn }}</li>
+                  <li>Checked Out: {{ marker.checkOut }}</li>
                 </gmap-info-window>
               </gmap-marker>
             </gmap-map>

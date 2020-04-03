@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Application;
 using Application.Data;
 using Application.Requests;
+using Application.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,33 @@ namespace WhereHaveIBeen.Controllers
 
             var result = new OkObjectResult(text);
             return result;
+        }
+
+        [HttpGet("risk")]
+        public async Task<ActionResult<IList<RiskyVisitResponse>>> GetForVisit([FromQuery] int visitId)
+        {
+            var conn = ContextProvider.Conn;
+            var visit = await conn.GetAsync<Visit>(visitId);
+            var visits = await RiskAccess.GetRiskyVisitsFor(visit);
+            var response = new List<RiskyVisitResponse>();
+
+            foreach (var item in visits)
+            {
+                var riskyVisit = new RiskyVisitResponse()
+                {
+                    VisitId = visit.VisitId,
+                    Address = visit.Address,
+                    CheckIn = visit.CheckIn,
+                    CheckOut = visit.CheckOut.GetValueOrDefault(visit.CheckIn),
+                    Latitude = visit.Latitude,
+                    Longitude = visit.Longitude,
+                    DistanceInKm =
+                    Convert.ToInt32(GPSExtensions.GetDistance(visit.Longitude, visit.Latitude, item.Longitude, item.Latitude) / 1000)
+                };
+                response.Add(riskyVisit);
+            }
+
+            return new OkObjectResult(response);
         }
 
         [HttpPost]

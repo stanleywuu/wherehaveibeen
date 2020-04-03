@@ -38,7 +38,21 @@
                   <font-awesome-icon icon="biohazard" />
                   At Risk
                 </span>
-                <span v-if="!loc.AtRisk">
+                <span class="risky" v-if="!loc.AtRisk && loc.RiskyInteractions > 0">
+                  <font-awesome-icon icon="hand-sparkles" />
+                  Potential Risk 
+                  <b-button id='covid-interaction-btn' class="ml-1 mr-1"
+                    @click="getDetails(loc)">
+                    {{loc.RiskyInteractions}} risky Encounters
+                  </b-button>
+                  <span v-for="detail in loc.details"
+                  :key="detail.VisitId"> 
+                  <li>Checked in: {{detail.checkin}}</li>
+                  <li>Checked out: {{detail.checkOut}}
+                  <li>{{distanceInKm}} km</li>
+                  </span>
+                </span>
+                <span v-if="!loc.AtRisk && loc.RiskyInteractions == 0">
                   <font-awesome-icon icon="hand-sparkles" />
                   Low Risk
                 </span>
@@ -66,6 +80,10 @@
   }
   .at-risk {
     color: red;
+    font-weight: bold;
+  }
+  .risky {
+    color:teal;
     font-weight: bold;
   }
 </style>
@@ -118,6 +136,21 @@ export default {
     dateFormatter (datetime) {
       let epoch = new Date(Date.parse(datetime))
       return epoch
+    },
+    getDetails(loc)
+    {
+      this.$http.get(this.api.endpoint + '/visit/risk?visitId=' + loc.VisitId)
+        .then(response => {
+          if (response.data && response.data.length > 0)
+          {
+            loc.hasDetail = true
+            loc.details = []
+            loc.details = response.data
+          }
+        })
+        .catch(e => {
+          this.api.errors.push(e)
+        })
     }
   }
 }

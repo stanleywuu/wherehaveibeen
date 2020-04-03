@@ -63,7 +63,12 @@ and latituderounded = ? and longituderounded = ?
 and
 ((checkin <= ? AND checkout >= ?) OR
 (checkin >= ? AND checkIn <= ?))
-", visit.UserId, visit.LatitudeRounded, visit.LongitudeRounded,
+",
+// Visit = target visit
+// so if a risky visit happened before user checked in and left after the user checked out
+// or (if a risky visit happened after user checked in, but before user checked out)
+// then it's risky
+visit.UserId, visit.LatitudeRounded, visit.LongitudeRounded,
 visit.CheckIn.Ticks, visit.CheckIn.Ticks,
 visit.CheckIn.Ticks, visit.CheckOut.Value.Ticks
                 );
