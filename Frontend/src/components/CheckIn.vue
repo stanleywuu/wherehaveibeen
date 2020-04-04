@@ -115,10 +115,16 @@ export default {
   },
   methods: {
     formattedDate () {
-      return new Date().toJSON().slice(0,10)
+      var date = new Date();
+      return date.getFullYear() + '-' +
+      (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
+      date.getDate().toString().padStart(2, '0')
     },
     formattedTime () {
-      return new Date().toJSON().slice(11, 19)
+      var date = new Date();
+      return date.getHours().toString().padStart(2, '0') + ':' +
+        date.getMinutes().toString().padStart(2, '0') + ':' +
+        date.getSeconds().toString().padStart(2, '0')
     },
     getPosition: function(marker) {
       return {
@@ -197,11 +203,13 @@ export default {
       .then(response => {
         this.showFailureAlert = false
         this.showSuccessAlert = true
+        setTimeout(()=> {this.showSuccessAlert = false}, 3000)
         this.api.responses.push(response)
       })
       .catch(e => {
         this.showSuccessAlert = false
         this.showFailureAlert = true
+        setTimeout(()=> {this.showFailureAlert = false}, 3000)
         this.api.errors.push(e)
       })
     }
