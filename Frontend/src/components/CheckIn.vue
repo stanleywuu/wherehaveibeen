@@ -38,7 +38,7 @@
               <div class="bd-highlight">
                 {{ this.currentPlace['formatted_address'] }}
               </div>
-              <div class="bd-highlight">
+              <div class="mb-auto bd-highlight">
                 <b-row id="datetime-pickers">
                   <b-col md="6">
                     <b-form-datepicker
@@ -58,16 +58,6 @@
                       now-button
                       class="mb-3">
                     </b-form-timepicker>
-                  </b-col>
-                </b-row>
-              </div>
-              <div class="mb-auto bd-highlight">
-                <b-row id="long-lat-display">
-                  <b-col md="6">
-                    <p>Latitude: {{ center.lat }}</p>
-                  </b-col>
-                  <b-col md="6">
-                    <p>Longitude: {{ center.lng }}</p>
                   </b-col>
                 </b-row>
               </div>
@@ -230,6 +220,6 @@ export default {
   padding-bottom: 10px;
 }
 #submit-alert, #submit-btn {
-  padding-left:25px;
+  padding-left: 25px;
 }
 </style>

@@ -102,13 +102,26 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
-#user-auth-actons {
-  width: 50%;
-  margin: auto;
+/* small */
+@media (max-width: 768px) {
+  #user-auth-actons {
+    width: 90%;
+    margin: auto;
+  }
+  .authed-user {
+    width: 90%;
+    margin: auto;
+  }
 }
-.authed-user {
-  width: 75%;
-  margin: auto;
+/* medium */
+@media (min-width: 768px) {
+  #user-auth-actons {
+    width: 50%;
+    margin: auto;
+  }
+  .authed-user {
+    width: 75%;
+    margin: auto;
+  }
 }
 </style>
