@@ -23,3 +23,7 @@ Frontend/node_modules/
 /Backend/WhereHaveIBeen/WhereHaveIBeen/db.sqlite
 /Backend/WhereHaveIBeen/WhereHaveIBeen/appsettings.Development.json
 /Frontend/yarn.lock
+/Mobile/WhereHaveIBeen.Mobile/.vs/WhereHaveIBeen.Mobile
+/Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile/obj
+/Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile.Android/obj
+/Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile/WhereHaveIBeen.Mobile.iOS/obj

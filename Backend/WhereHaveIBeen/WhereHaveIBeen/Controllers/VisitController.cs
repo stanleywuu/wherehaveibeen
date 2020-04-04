@@ -65,7 +65,7 @@ namespace WhereHaveIBeen.Controllers
                 response.Add(riskyVisit);
             }
 
-            return new OkObjectResult(response);
+            return new OkObjectResult(response.OrderBy(r => r.DistanceInKm));
         }
 
         [HttpPost]
