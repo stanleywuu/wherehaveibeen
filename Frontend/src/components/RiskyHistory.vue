@@ -22,6 +22,7 @@
             <gmap-map
               :center="center"
               :zoom="zoomLevel"
+              :options="mapOptions"
               @click="clickedOnMap"
               style="width:100%; height: 500px;">
               <gmap-marker
@@ -57,6 +58,12 @@ export default {
         endpoint: process.env.VUE_APP_API_URL,
         responses: [],
         errors: []
+      },
+      mapOptions: {
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        zoomControl: false
       },
       center: { lat: 0, lng: 0 },
       zoomLevel: 12,

@@ -19,6 +19,7 @@
           <gmap-map
             :center="findCenter(loc)"
             :zoom="zoomLevel"
+              :options="mapOptions"
             style="width:100%; height: 200px;">
             <gmap-marker
               :position="findCenter(loc)"
@@ -77,6 +78,12 @@ export default {
       api: {
         endpoint: process.env.VUE_APP_API_URL,
         errors: []
+      },
+      mapOptions: {
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        zoomControl: false
       },
       locations: [],
       zoomLevel: 14

@@ -23,6 +23,7 @@
             <gmap-map
               :center="center"
               :zoom="zoomLevel"
+              :options="mapOptions"
               ref ="map"
               @click="clickedOnMap"
               style="width:100%; height: 500px;">
@@ -105,8 +106,15 @@ export default {
         responses: [],
         errors: []
       },
+      mapOptions: {
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        zoomControl: false
+      },
       center: { lat: 0, lng: 0 },
       zoomLevel: 12,
+      autoCompleteQuery: '',
       currentPlace: null,
       unknownPlaceName: null,
       locatingUser: false,
@@ -138,13 +146,13 @@ export default {
       this.$refs['autocomplete'].$el.value = ''
     },
     formattedDate () {
-      var date = new Date();
+      let date = new Date();
       return date.getFullYear() + '-' +
       (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
       date.getDate().toString().padStart(2, '0')
     },
     formattedTime () {
-      var date = new Date();
+      let date = new Date();
       return date.getHours().toString().padStart(2, '0') + ':' +
         date.getMinutes().toString().padStart(2, '0') + ':' +
         date.getSeconds().toString().padStart(2, '0')
@@ -186,8 +194,7 @@ export default {
       this.locatingUser = false
       })
     },
-    clickedOnMap (e)
-    {
+    clickedOnMap (e) {
       this.unknownPlaceName = null
       this.center.lat = e.latLng.lat()
       this.center.lng = e.latLng.lng()
