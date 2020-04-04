@@ -32,11 +32,22 @@
           </b-col>
           <b-col md="6">
             <b-card-body
-              :title="this.currentPlace['name']"
               class="d-flex align-items-start flex-column bd-highlight"
               style="height: 100%;">
-              <div class="bd-highlight">
-                {{ this.currentPlace['formatted_address'] }}
+              <div class="place-container">
+                <div class="title" v-if="this.currentPlace.name">
+                  {{ this.currentPlace.name }}
+                </div>
+                <div v-if="!this.currentPlace.name">
+                  <div class="title">
+                    You chose an unknown place
+                  </div>
+                  <label for="newPlaceName">Name this place:</label>
+                  <input id="newPlaceName" type="text" v-model="unknownPlaceName" />
+                </div>
+                <div class="bd-highlight">
+                  {{ this.currentPlace.formatted_address }}
+                </div>
               </div>
               <div class="mb-auto bd-highlight">
                 <b-row id="datetime-pickers">
@@ -98,6 +109,7 @@ export default {
       center: { lat: 0, lng: 0 },
       zoomLevel: 12,
       currentPlace: null,
+      unknownPlaceName: null,
       locatingUser: false,
       checkInDate: this.formattedDate(),
       checkInTime: this.formattedTime(),
@@ -165,6 +177,7 @@ export default {
     },
     clickedOnMap (e)
     {
+      this.unknownPlaceName = null
       this.center.lat = e.latLng.lat()
       this.center.lng = e.latLng.lng()
       if (e.placeId) {
@@ -187,7 +200,7 @@ export default {
         "latitude": this.center.lat,
         "longitude": this.center.lng,
         "placeId": placeId || '',
-        "placeName": placeName || '',
+        "placeName": placeName || this.unknownPlaceName || '',
         "address": address || '',
         "checkin": [this.checkInDate, this.checkInTime].join('T')
       }
@@ -220,6 +233,17 @@ export default {
 <style scoped>
 .form-group {
   text-align: left !important;
+}
+.place-container {
+  width: 100%;
+}
+.place-container .title {
+  font-weight: bold;
+  text-align: center;
+  margin: 12px 0;
+}
+.place-container label {
+  margin-right: 8px;
 }
 .bd-highlight, .card-title, #submit-alert, #submit-btn {
   width: 100%;
