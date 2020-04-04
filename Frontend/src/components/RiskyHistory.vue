@@ -2,8 +2,10 @@
   <div id="danger-map-container">
     <h2>Locations at risk</h2>
     <gmap-autocomplete
+      ref="autocomplete"
       style="width:75%"
       placeholder="Search for a place"
+      :select-first-on-enter="true"
       @place_changed="setPlace">
     </gmap-autocomplete>
     <span id="disabled-btn-wrapper">
@@ -73,7 +75,21 @@ export default {
       hideGeolocateToolTip: true
     }
   },
+  computed: {
+    userAuth () {
+      return this.$store.getters.getUserAuth
+    }
+  },
+  watch: {
+    userAuth() {
+      this.clearMapQuery()
+    }
+  },
   methods: {
+    clearMapQuery () {
+      this.currentPlace = null
+      this.$refs['autocomplete'].$el.value = ''
+    },
     getPosition: function(marker) {
       return {
         lat: parseFloat(marker.lat),

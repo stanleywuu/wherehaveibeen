@@ -64,7 +64,16 @@ export default {
       return this.$store.getters.getUserAuth
     }
   },
+  watch: {
+    userLoggedIn() {
+      this.hideDangerMapOnAuth()
+    }
+  },
   methods: {
+    hideDangerMapOnAuth () {
+      this.showDangerMap = false
+      this.displayCheckinForm()
+    },
     registrationComplete () {
       this.$refs.loginTab.activate()
     },
