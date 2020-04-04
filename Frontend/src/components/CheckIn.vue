@@ -2,10 +2,11 @@
   <div id="check-in-container">
     <h2>Where did you go today?</h2>
     <gmap-autocomplete
+      ref="autocomplete"
       style="width:75%"
       placeholder="Search for a place"
-      @place_changed="setPlace">
-    </gmap-autocomplete>
+      :select-first-on-enter="true"
+      @place_changed="setPlace" />
     <span id="disabled-btn-wrapper">
       <b-button v-show="!this.locatingUser" :disabled="!this.hideGeolocateToolTip" size="sm" id="user-location-btn" class="ml-3" @click="geolocate()">Find Me</b-button>
     </span>
@@ -25,9 +26,7 @@
               ref ="map"
               @click="clickedOnMap"
               style="width:100%; height: 500px;">
-              <gmap-marker
-                :position="center"
-              ></gmap-marker>
+              <gmap-marker :position="center" />
             </gmap-map>
           </b-col>
           <b-col md="6">
@@ -123,9 +122,21 @@ export default {
     this.timeoutGeoLocate()
   },
   computed: {
-    google: gmapApi
+    google: gmapApi,
+    userAuth () {
+      return this.$store.getters.getUserAuth
+    }
+  },
+  watch: {
+    userAuth() {
+      this.clearMapQuery()
+    }
   },
   methods: {
+    clearMapQuery () {
+      this.currentPlace = null
+      this.$refs['autocomplete'].$el.value = ''
+    },
     formattedDate () {
       var date = new Date();
       return date.getFullYear() + '-' +
