@@ -82,8 +82,7 @@ namespace WhereHaveIBeen.Mobile.Views
             if (isValid)
             {
                 App.PersistUser(response.Data);
-                Navigation.InsertPageBefore(new MapPage(), this);
-                await Navigation.PopAsync();
+                
             }
             else
             {

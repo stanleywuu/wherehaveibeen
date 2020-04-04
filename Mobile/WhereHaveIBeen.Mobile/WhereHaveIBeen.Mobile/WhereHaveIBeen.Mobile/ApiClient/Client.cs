@@ -13,6 +13,5 @@ namespace WhereHaveIBeen.Mobile.ApiClient
         });
 
         public static HttpClient Instance => lazy.Value;
-
     }
 }

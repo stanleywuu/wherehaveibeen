@@ -16,7 +16,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
@@ -99,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WhereHaveIBeen.Mobile\WhereHaveIBeen.Mobile.csproj">
-      <Project>{0B3C3D93-497D-4826-B070-830A16848641}</Project>
+      <Project>{BAD22F3F-88CA-4BAC-83ED-2F545C033DA2}</Project>
       <Name>WhereHaveIBeen.Mobile</Name>
     </ProjectReference>
   </ItemGroup>

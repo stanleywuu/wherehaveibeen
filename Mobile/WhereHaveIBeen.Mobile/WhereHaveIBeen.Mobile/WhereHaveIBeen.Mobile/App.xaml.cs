@@ -46,7 +46,8 @@ namespace WhereHaveIBeen.Mobile
 
             LoggedInUser = LoadUser();
 
-            MainPage = LoggedInUser == null ? (Page)new LoginPage() : new MapPage();
+            var page = new NavigationPage(LoggedInUser == null ? (Page)new LoginPage() : new MapPage());
+            MainPage = page;
         }
 
         protected override void OnStart()

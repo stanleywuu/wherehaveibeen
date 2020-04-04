@@ -27,9 +27,13 @@ namespace WhereHaveIBeen.Mobile.ApiClient
                     Password = password
                 });
 
-                var content = new StringContent(rawContent);
+                var request = new HttpRequestMessage(HttpMethod.Post,
+                    new Uri("membership/login", UriKind.Relative));
 
-                var response = await Client.Instance.PostAsync("membership/login", content);
+                request.Content = new StringContent(rawContent, Encoding.UTF8, "application/json");
+
+
+                var response = await Client.Instance.SendAsync(request);
                 var responseContent = await response.Content?.ReadAsStringAsync();
 
                 return new ApiResponse<LoginResponse>()
@@ -39,8 +43,9 @@ namespace WhereHaveIBeen.Mobile.ApiClient
                     : JsonConvert.DeserializeObject<LoginResponse>(responseContent)
                 };
             }
-            catch
+            catch (Exception ex)
             {
+                var d = ex;
                 return new ApiResponse<LoginResponse>()
                 {
                     Data = null,

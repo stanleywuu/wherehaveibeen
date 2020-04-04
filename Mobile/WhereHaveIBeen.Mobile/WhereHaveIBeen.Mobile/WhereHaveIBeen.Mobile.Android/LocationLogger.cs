@@ -5,6 +5,7 @@ using System.Text;
 using Android;
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Locations;
 using Android.OS;
 using Android.Runtime;
@@ -92,7 +93,7 @@ namespace WhereHaveIBeen.Mobile.Droid
                 else
                     LogTime = DateTime.Now;
 
-                MessagingCenter.Send<LocationLogger>(this, LocationMessages.LocationLogged);
+                // MessagingCenter.Send<LocationLogger>(this, LocationMessages.LocationLogged);
             }
         }
 
