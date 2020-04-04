@@ -127,8 +127,6 @@ export default {
             this.coords.push(checkin)
           })
         }
-        console.log('coords')
-        console.log(this.coords)
       })
       .catch(e => {
         this.showSuccessAlert = false

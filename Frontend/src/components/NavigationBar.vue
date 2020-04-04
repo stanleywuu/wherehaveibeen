@@ -65,11 +65,14 @@ export default {
         userId: this.$store.getters.getUserId,
         IsAtRisk: true
       }
-      this.$http.post(this.api.endpoint + '/membership/corona', requestData,
-          {
-            headers: {
+      this.$http.post(this.api.endpoint + '/membership/corona',
+        requestData,
+        {
+          headers: {
             Authorization: "Bearer " + userToken
-          }})
+          }
+        }
+      )
       .then(response => {
         this.api.responses.push(response)
       })
