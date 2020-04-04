@@ -38,8 +38,8 @@ namespace Application.Data
             var visits = await conn.QueryAsync<Visit>(@"select v1.*
 from visit v1
 inner join visit v2
-    ON v2.latitudeRounded = v1.latitudeRounded
-    AND v2.longitudeRounded = v1.longitudeRounded
+    ON (v2.latitudeRounded >= (v1.latitudeRounded - 0.001) AND v2.latitudeRounded <= (v1.latitudeRounded + 0.001))
+    AND (v2.longitudeRounded >= (v1.longitudeRounded - 0.001) AND v2.longitudeRounded <= (v1.longitudeRounded + 0.001))
     AND v1.userid <> v2.userid
     AND v2.AtRisk = 1
 WHERE v2.userId = ?
@@ -56,10 +56,11 @@ userId, startDate.Ticks);
         {
             var conn = ContextProvider.Conn;
             var visits = await conn.QueryAsync<Visit>
-                (@"
+                ($@"
 select * from Visit
 where AtRisk = 1 and UserId != ?
-and latituderounded = ? and longituderounded = ?
+and latituderounded >= ({visit.LatitudeRounded - 0.001}) AND latituderounded <= ({visit.LatitudeRounded + 0.001}) 
+and longituderounded >= ({visit.LongitudeRounded - 0.001}) AND longituderounded <= ({visit.LongitudeRounded + 0.001})
 and
 ((checkin <= ? AND checkout >= ?) OR
 (checkin >= ? AND checkIn <= ?))
@@ -68,7 +69,7 @@ and
 // so if a risky visit happened before user checked in and left after the user checked out
 // or (if a risky visit happened after user checked in, but before user checked out)
 // then it's risky
-visit.UserId, visit.LatitudeRounded, visit.LongitudeRounded,
+visit.UserId,
 visit.CheckIn.Ticks, visit.CheckIn.Ticks,
 visit.CheckIn.Ticks, visit.CheckOut.Value.Ticks
                 );

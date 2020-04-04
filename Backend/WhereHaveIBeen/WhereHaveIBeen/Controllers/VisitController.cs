@@ -51,6 +51,7 @@ namespace WhereHaveIBeen.Controllers
 
             foreach (var item in visits)
             {
+                var distance = GPSExtensions.GetDistanceInMeters(visit.Longitude, visit.Latitude, item.Longitude, item.Latitude);
                 var riskyVisit = new RiskyVisitResponse()
                 {
                     VisitId = item.VisitId,
@@ -59,8 +60,7 @@ namespace WhereHaveIBeen.Controllers
                     CheckOut = item.CheckOut.GetValueOrDefault(item.CheckIn),
                     Latitude = item.Latitude,
                     Longitude = item.Longitude,
-                    DistanceInKm =
-                    Convert.ToInt32(GPSExtensions.GetDistance(visit.Longitude, visit.Latitude, item.Longitude, item.Latitude) / 1000)
+                    DistanceInKm = Convert.ToInt32(distance)
                 };
                 response.Add(riskyVisit);
             }

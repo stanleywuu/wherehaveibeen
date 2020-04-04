@@ -64,6 +64,7 @@ namespace WhereHaveIBeen.Controllers
                         groupedRiskyVisits.Add(visit.VisitId, riskyVisit);
                     }
 
+                    var distance = GPSExtensions.GetDistanceInMeters(visit.Longitude, visit.Latitude, visit.Longitude2, visit.Latitude2);
                     var relatedVisit = new RiskyVisitResponse()
                     {
                         Address = visit.Address2,
@@ -71,7 +72,7 @@ namespace WhereHaveIBeen.Controllers
                         Longitude = visit.Longitude2,
                         CheckIn = visit.CheckIn2,
                         CheckOut = visit.CheckOut2,
-                        DistanceInKm = Convert.ToInt32(GPSExtensions.GetDistance(visit.Longitude, visit.Latitude, visit.Longitude2, visit.Latitude2) / 1000)
+                        DistanceInKm = Convert.ToInt32(distance)
                     };
 
                     groupedRiskyVisits[visit.VisitId].LinkedVisits.Add(relatedVisit);
