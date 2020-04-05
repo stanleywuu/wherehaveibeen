@@ -148,7 +148,7 @@ export default {
       return !location.AtRisk && location.RiskyInteractions > 0
     },
     formatDistance (detail) {
-      return detail.distanceInKm > 0 ? `Approximately ${detail.distanceInKm}km away` : '';
+      return detail.distanceInKm > 0 ? `Approximately ${detail.distanceInKm} metres away` : '';
     }
   }
 }
