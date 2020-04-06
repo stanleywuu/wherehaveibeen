@@ -171,6 +171,7 @@ export default {
 
     },
     timeoutGeoLocate () {
+      this.geolocate()
       setTimeout(()=>{
         if (this.locatingUser) {
           this.locatingUser = false

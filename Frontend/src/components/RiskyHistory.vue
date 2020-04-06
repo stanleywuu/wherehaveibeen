@@ -104,6 +104,7 @@ export default {
       this.onGetCoords(this.center.lat, this.center.lng)
     },
     timeoutGeoLocate () {
+      this.geolocate()
       setTimeout(()=>{
         if (this.locatingUser) {
           this.locatingUser = false
