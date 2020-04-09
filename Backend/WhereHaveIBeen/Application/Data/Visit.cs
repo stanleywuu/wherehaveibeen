@@ -1,11 +1,12 @@
-﻿using SQLite;
+﻿using Dapper.Contrib.Extensions;
 using System;
 
 namespace Application.Data
 {
+    [Table("Visits")]
     public class Visit
     {
-        [PrimaryKey, AutoIncrement]
+        [Key]
         public int VisitId { get; set; }
 
         public double Longitude { get; set; }

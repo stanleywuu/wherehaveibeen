@@ -1,13 +1,12 @@
-﻿using SQLite;
+﻿using Dapper.Contrib.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Data
 {
+    [Table("PeopleAtRisk")]
     public class PersonAtRisk
     {
-        [PrimaryKey, AutoIncrement]
+        [Key]
         public int NotificationId { get; set; }
 
         public int UserId { get; set; }

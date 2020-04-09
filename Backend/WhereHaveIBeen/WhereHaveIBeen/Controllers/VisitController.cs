@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Application;
+﻿using Application;
 using Application.Data;
 using Application.Requests;
 using Application.Response;
@@ -12,7 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Storage;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WhereHaveIBeen.Controllers
 {
@@ -30,7 +29,6 @@ namespace WhereHaveIBeen.Controllers
         public async Task<ActionResult<string>> Get([FromQuery] int userId = 0)
         {
             // TODO: Make sure userId IS current user
-            var conn = ContextProvider.Conn;
             var response = await VisitAccess.GetVisitResponseFor(userId);
 
             StringBuilder sb = new StringBuilder();
@@ -44,8 +42,7 @@ namespace WhereHaveIBeen.Controllers
         [HttpGet("risk")]
         public async Task<ActionResult<IList<RiskyVisitResponse>>> GetForVisit([FromQuery] int visitId)
         {
-            var conn = ContextProvider.Conn;
-            var visit = await conn.GetAsync<Visit>(visitId);
+            var visit = await DataAccess.Get<Visit, int>(visitId);
             var visits = await RiskAccess.GetRiskyVisitsFor(visit);
             var response = new List<RiskyVisitResponse>();
 
@@ -72,12 +69,11 @@ namespace WhereHaveIBeen.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<string>> Create([FromBody]VisitRequest request)
         {
-            var conn = ContextProvider.Conn;
-            var user = await conn.GetAsync<User>(request.UserId);
+            var user = await DataAccess.Get<User, int>(request.UserId);
             var entity = await request.ToPersistedData();
             entity.AtRisk = user.AtRisk;
 
-            await conn.InsertAsync(entity);
+            await entity.Insert();
 
             return new OkObjectResult("Visit has been logged");
         }
@@ -94,16 +90,8 @@ namespace WhereHaveIBeen.Controllers
                     return Unauthorized();
                 }
 
-                var conn = ContextProvider.Conn;
-                var visitsToDelete = await conn.Table<Visit>().Where(v => v.UserId == userId).ToArrayAsync();
+                await VisitAccess.DeleteVisitsByUser(userId);
 
-                await conn.RunInTransactionAsync((c) =>
-                {
-                    foreach (var visit in visitsToDelete)
-                    {
-                        c.Delete(visit);
-                    }
-                });
             }
             else return Unauthorized();
 

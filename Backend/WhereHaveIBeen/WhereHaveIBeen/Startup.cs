@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application;
-using Application.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Storage;
+using System;
+using System.Threading.Tasks;
 
 namespace WhereHaveIBeen
 {
@@ -23,9 +17,7 @@ namespace WhereHaveIBeen
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            InitStorage().ConfigureAwait(false);
         }
-
 
         public IConfiguration Configuration { get; }
 
@@ -49,6 +41,13 @@ namespace WhereHaveIBeen
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            var contextInfo = new ContextInfo
+            {
+                ConnectionString = Configuration["StorageConnectionString"]
+            };
+            var contextProvider = new ContextProvider(contextInfo);
+            ContextProvider.Instance = contextProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,9 +80,9 @@ namespace WhereHaveIBeen
         {
             try
             {
-                await ContextProvider.Conn.CreateTableAsync<User>();
-                await ContextProvider.Conn.CreateTableAsync<Visit>();
-                await ContextProvider.Conn.CreateTableAsync<PersonAtRisk>();
+                //await ContextProvider.Conn.CreateTableAsync<User>();
+                //await ContextProvider.Conn.CreateTableAsync<Visit>();
+                //await ContextProvider.Conn.CreateTableAsync<PersonAtRisk>();
             }
             catch (Exception ex)
             {

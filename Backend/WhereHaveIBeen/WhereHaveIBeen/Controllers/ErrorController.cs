@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SQLite;
+using System;
+using System.Data.SqlClient;
 
 namespace WhereHaveIBeen.Controllers
 {
@@ -37,7 +34,7 @@ namespace WhereHaveIBeen.Controllers
                 }
                 else if (
                     exception is ArgumentOutOfRangeException ||
-                    exception is SQLiteException)
+                    exception is SqlException)
                 {
                     return ValidationProblem(new ValidationProblemDetails() { Detail = exception.Message });
                 }

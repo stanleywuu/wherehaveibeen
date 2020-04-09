@@ -1,23 +1,20 @@
-﻿using SQLite;
+﻿using Dapper.Contrib.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Data
 {
+    [Table("Users")]
     public class User
     {
         public User()
         {
         }
 
-        [PrimaryKey, AutoIncrement]
+        [Key]
         public int UserId { get; set; }
 
-        [Unique]
         public string Username { get; set; }
 
-        [Unique]
         public string Email { get; set; }
 
         public string Password { get; set; }

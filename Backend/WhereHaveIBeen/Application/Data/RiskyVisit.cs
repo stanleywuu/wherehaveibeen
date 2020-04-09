@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Dapper.Contrib.Extensions;
+using System;
 
 namespace Application.Data
 {
+    [Table("RiskyVisit")]
     public class RiskyVisit
     {
         public int VisitId { get; set; }
