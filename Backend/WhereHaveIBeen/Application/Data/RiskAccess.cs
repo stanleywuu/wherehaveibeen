@@ -25,8 +25,8 @@ namespace Application.Data
                 var visits = await conn.QueryAsync<Visit>(@"select v1.*
 from visits v1
 inner join visits v2
-    ON (v2.latitudeRounded >= (v1.latitudeRounded - 0.001) AND v2.latitudeRounded <= (v1.latitudeRounded + 0.001))
-    AND (v2.longitudeRounded >= (v1.longitudeRounded - 0.001) AND v2.longitudeRounded <= (v1.longitudeRounded + 0.001))
+    ON (v2.latitudeRounded >= (v1.latitudeRounded - 0.003) AND v2.latitudeRounded <= (v1.latitudeRounded + 0.003))
+    AND (v2.longitudeRounded >= (v1.longitudeRounded - 0.003) AND v2.longitudeRounded <= (v1.longitudeRounded + 0.003))
     AND v1.userid <> v2.userid
     AND v2.AtRisk = 1
 WHERE v2.userId = @userId
@@ -48,8 +48,8 @@ AND ((v2.CheckIn >= v1.CheckIn AND V2.CheckIn <= v1.CheckOut) OR
                     ($@"
 select * from Visits
 where AtRisk = 1 and UserId != @UserId
-and latituderounded >= ({visit.LatitudeRounded - 0.001}) AND latituderounded <= ({visit.LatitudeRounded + 0.001}) 
-and longituderounded >= ({visit.LongitudeRounded - 0.001}) AND longituderounded <= ({visit.LongitudeRounded + 0.001})
+and latituderounded >= ({visit.LatitudeRounded - 0.003}) AND latituderounded <= ({visit.LatitudeRounded + 0.003}) 
+and longituderounded >= ({visit.LongitudeRounded - 0.003}) AND longituderounded <= ({visit.LongitudeRounded + 0.003})
 and
 ((checkin <= @CheckIn AND checkout >= @CheckIn) OR
 (checkin >= @CheckIn AND checkIn <= @CheckOut))

@@ -34,13 +34,34 @@ u.Password = @Password",
                 var query = await conn.QueryAsync<Visit>(@"
 SELECT * FROM VISITS v WHERE
     v.AtRisk = 1 AND
-    v.Latitude2Decimal = @Lat2D AND
+    v.Latitude2Decimal >= @Lat2D AND
     v.Longitude2Decimal = @Lng2D AND
     v.CheckIn > @StartDate",
                 new { Lat2D = lat2D, Lng2D = lng2D, StartDate = startDate });
 
                 return query.ToList();
             }
+        }
+        public static async Task<ICollection<Visit>> GetAtRiskVisitsByVisit(int userId, double lat, double lng, DateTime? from)
+        {
+            using (var conn = ContextProvider.Instance.Conn)
+            {
+                var lat3D = (double)Math.Round((decimal)lat, 3);
+                var lng3D = (double)Math.Round((decimal)lng, 3);
+
+                var startDate = from ?? DateTime.Now.AddDays(-15);
+                var query = await conn.QueryAsync<Visit>(@"
+SELECT * FROM VISITS v WHERE
+    v.AtRisk = 1 AND
+    v.UserId <> @UserId AND
+    ((v.LatitudeRounded >= @Lat3D - 0.003) AND (v.LatitudeRounded <= @Lat3D + 0.003)) AND
+    ((v.LongitudeRounded >= @Lng3D - 0.003) AND (v.LongitudeRounded <= @Lng3D + 0.003)) AND
+    v.CheckIn > @StartDate",
+                new { UserId = userId, Lat3D = lat3D, Lng3D = lng3D, StartDate = startDate });
+
+                return query.ToList();
+            }
+
         }
 
         public static async Task<ICollection<RiskyVisit>> GetAtRiskVisits(int userId, DateTime? from, DateTime? to)
@@ -54,8 +75,8 @@ select v1.VisitId, v1.CheckIn, v1.CheckOut as CheckOut, v1.Address as Address, v
 v2.CheckIn as CheckIn2, v2.CheckOut as CheckOut2, v2.Address as Address2, v2.Latitude as Latitude2, v2.Longitude as Longitude2
 from visits v1 
 inner join visits v2 
-    ON (v2.latitudeRounded >= (v1.latitudeRounded - 0.001) AND v2.latitudeRounded <= (v1.latitudeRounded + 0.001))
-    AND (v2.longitudeRounded >= (v1.longitudeRounded - 0.001) AND v2.longitudeRounded <= (v1.longitudeRounded + 0.001))
+    ON (v2.latitudeRounded >= (v1.latitudeRounded - 0.003) AND v2.latitudeRounded <= (v1.latitudeRounded + 0.003))
+    AND (v2.longitudeRounded >= (v1.longitudeRounded - 0.003) AND v2.longitudeRounded <= (v1.longitudeRounded + 0.003))
     AND v2.userid <> v1.userid
     AND v2.AtRisk = 1
 where v1.userid = @UserId
