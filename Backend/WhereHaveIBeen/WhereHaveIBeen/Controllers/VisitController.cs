@@ -74,8 +74,10 @@ namespace WhereHaveIBeen.Controllers
             entity.AtRisk = user.AtRisk;
 
             await entity.Insert();
+            var riskyVisits = await RiskAccess.GetRiskyVisitsFor(entity);
+            var response = JsonConvert.SerializeObject(riskyVisits);
 
-            return new OkObjectResult("Visit has been logged");
+            return new OkObjectResult(response);
         }
 
         [HttpPost, Route("delete/{userId}"), Authorize(AuthenticationSchemes = "Bearer")]

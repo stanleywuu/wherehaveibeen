@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application;
+﻿using Application;
 using Application.Data;
 using Application.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Storage;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace WhereHaveIBeen.Controllers
 {
@@ -28,6 +28,24 @@ namespace WhereHaveIBeen.Controllers
         {
             var riskyVisits = await UserAccess.GetAtRiskVisits(lat, lng, from, to);
             return new OkObjectResult(riskyVisits);
+        }
+
+        [HttpGet("visit")]
+        public async Task<ActionResult<string>> GetRiskyVisits([FromQuery]int userId, [FromQuery]double lat, [FromQuery]double lng)
+        {
+            var startDate = DateTime.Now.AddDays(-15);
+            var riskyVisits = await UserAccess.GetAtRiskVisitsByVisit(userId, lat, lng, startDate);
+            var riskyResponse = riskyVisits.Select(v =>
+            {
+                return new
+                {
+                    CheckIn = v.CheckIn,
+                    CheckOut = v.CheckOut,
+                    Distance = Math.Round(GPSExtensions.GetDistanceInMeters(lng, lat, v.Longitude, v.Latitude), 2)
+                };
+            });
+
+            return new OkObjectResult(JsonConvert.SerializeObject(riskyResponse.OrderBy(v => v.Distance)));
         }
 
         [HttpGet("user")]
