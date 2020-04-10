@@ -33,8 +33,9 @@
           <b-col md="6">
             <b-card-body
               class="d-flex align-items-start flex-column bd-highlight"
+              v-bind:class="{'danger-container':dangers.length > 0 }"
               style="height: 100%;">
-              <div class="place-container">
+              <div class="place-container" >
                 <div class="title" v-if="this.currentPlace.name">
                   {{ this.currentPlace.name }}
                 </div>
@@ -70,6 +71,23 @@
                       class="mb-3">
                     </b-form-timepicker>
                   </b-col>
+                </b-row>
+              </div>
+              <div class="mb-auto bd-highlight dangerous-checkins" v-if="dangers.length > 0">
+                <span class="title">This place could be contagious</span>
+                <b-row 
+                  v-bind:class="{'even':index % 2 == 0, 'odd':index %2 > 0}"
+                  v-for="(danger, index) in dangers"
+                   :key="index">
+                   <b-row>
+                     <b-col md="6">
+                      <span>Carrier #{{index + 1}}</span>
+                    </b-col>
+                     <b-col md="6">
+                        <span>{{danger.Distance}} meters away</span>
+                    </b-col>
+                   </b-row>
+                    <span>{{danger.CheckIn}} - {{danger.CheckOut}}</span>
                 </b-row>
               </div>
               <div class="bd-highlight">
@@ -113,7 +131,7 @@ export default {
         zoomControl: false
       },
       center: { lat: 0, lng: 0 },
-      zoomLevel: 12,
+      zoomLevel: 7,
       autoCompleteQuery: '',
       currentPlace: null,
       unknownPlaceName: null,
@@ -122,7 +140,8 @@ export default {
       checkInTime: this.formattedTime(),
       showSuccessAlert: false,
       showFailureAlert: false,
-      hideGeolocateToolTip: true
+      hideGeolocateToolTip: true,
+      dangers:[]
     }
   },
   mounted () {
@@ -208,6 +227,8 @@ export default {
       } else {
         this.currentPlace = {}
       }
+
+      this.onGetRiskyVisits();
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
@@ -244,7 +265,19 @@ export default {
         setTimeout(()=> {this.showFailureAlert = false}, 3000)
         this.api.errors.push(e)
       })
-    }
+    },
+    onGetRiskyVisits()
+    {
+      var userId = this.$store.getters.getUserId;
+      var lat = this.center.lat;
+      var lng = this.center.lng;
+
+      this.$http.get(
+        this.api.endpoint + '/risk/visit?userId=' + userId + '&lat=' + lat + '&lng=' + lng
+      ).then(response => {
+        this.$set(this,'dangers', response.data)
+      })
+    },
   }
 }
 </script>
@@ -269,6 +302,31 @@ export default {
   text-align: center;
   justify-content: center;
   padding-bottom: 10px;
+}
+.danger-container
+{
+  background-color:#ffffcc;
+}
+.dangerous-checkins .title
+{
+  display:block;
+  width:100%;
+  font-weight: bold;
+  text-align: center;
+  margin: 12px 0;
+  background-color: #ffdddd;
+}
+.dangerous-checkins .even
+{
+  background-color: #ffffcc;
+}
+.dangerous-checkins .odd
+{
+  background-color: #ffdddd;
+}
+#dangerous-checkins span
+{
+  display:inline-block
 }
 #submit-alert, #submit-btn {
   padding-left: 25px;
