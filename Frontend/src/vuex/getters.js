@@ -7,5 +7,8 @@ export default {
   },
   getUserId (state) {
     return state.userId
-  }
+  },
+  getUserStatus (state){
+    return state.userStatus
+ }
 }

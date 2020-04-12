@@ -4,5 +4,8 @@ export default {
   },
   storeUserId (context, payload) {
     context.commit('setUserId', payload)
-  }
+  },
+  storeUserStatus(context, payload){
+    context.commit('setUserStatus', payload)
+  },
 }

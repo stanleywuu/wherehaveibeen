@@ -1,6 +1,9 @@
 <template>
   <div id="check-in-container">
-    <h2>Where did you go today?</h2>
+    <h2>I'd like to report my travels</h2>
+    <div class="instruction" >
+      Please find the places you have travelled to on the map and click "I was here" to record your travel history
+     </div>
     <gmap-autocomplete
       ref="autocomplete"
       style="width:75%"
@@ -33,9 +36,12 @@
           <b-col md="6">
             <b-card-body
               class="d-flex align-items-start flex-column bd-highlight"
-              v-bind:class="{'danger-container':dangers.length > 0 }"
+              v-bind:class="{'danger-container':filteredDangers.length > 0 }"
               style="height: 100%;">
               <div class="place-container" >
+                  <div v-if="this.userIsSick" class="at-risk">
+                    <font-awesome-icon icon="biohazard" /> At Risk
+                  </div>
                 <div class="title" v-if="this.currentPlace.name">
                   {{ this.currentPlace.name }}
                 </div>
@@ -73,23 +79,6 @@
                   </b-col>
                 </b-row>
               </div>
-              <div class="mb-auto bd-highlight dangerous-checkins" v-if="dangers.length > 0">
-                <span class="title">This place could be contagious</span>
-                <b-row 
-                  v-bind:class="{'even':index % 2 == 0, 'odd':index %2 > 0}"
-                  v-for="(danger, index) in dangers"
-                   :key="index">
-                   <b-row>
-                     <b-col md="6">
-                      <span>Carrier #{{index + 1}}</span>
-                    </b-col>
-                     <b-col md="6">
-                        <span>{{danger.Distance}} meters away</span>
-                    </b-col>
-                   </b-row>
-                    <span>{{danger.CheckIn}} - {{danger.CheckOut}}</span>
-                </b-row>
-              </div>
               <div class="bd-highlight">
                 <b-row id="submit-alert" class="align-self-end">
                   <b-alert dismissible variant="success" v-model="showSuccessAlert">
@@ -100,8 +89,24 @@
                     Please refresh or try again later
                   </b-alert>
                 </b-row>
+              </div>
                 <b-row id="submit-btn" class="align-self-end">
-                  <b-button @click="onCheckInSubmit()">Check In Here</b-button>
+                  <b-button @click="onCheckInSubmit()">I was here</b-button>
+                </b-row>
+              <div class="mb-auto bd-highlight dangerous-checkins" v-if="filteredDangers.length > 0">
+                <span class="title">This place could be contagious</span>
+                <b-row no-gutters
+                  v-bind:class="{'even':index % 2 == 0, 'odd':index %2 > 0}"
+                  v-for="(danger, index) in filteredDangers"
+                   :key="index">
+                   <b-row>
+                     <b-col md="6">
+                        <span>{{danger.Distance}} meters away</span>
+                    </b-col>
+                   </b-row>
+                   <b-row>
+                    <span>{{danger.CheckIn}} - {{danger.CheckOut}}</span>
+                   </b-row>
                 </b-row>
               </div>
             </b-card-body>
@@ -141,7 +146,8 @@ export default {
       showSuccessAlert: false,
       showFailureAlert: false,
       hideGeolocateToolTip: true,
-      dangers:[]
+      dangers:[],
+      filteredDangers:[]
     }
   },
   mounted () {
@@ -152,6 +158,9 @@ export default {
     google: gmapApi,
     userAuth () {
       return this.$store.getters.getUserAuth
+    },
+    userIsSick () {
+      return this.$store.getters.getUserStatus === 'corona'
     }
   },
   watch: {
@@ -188,6 +197,7 @@ export default {
       this.center.lat = this.currentPlace.geometry.location.lat()
       this.center.lng = this.currentPlace.geometry.location.lng()
 
+      this.onGetRiskyVisits();
     },
     timeoutGeoLocate () {
       this.geolocate()
@@ -201,17 +211,18 @@ export default {
     geolocate () {
       this.locatingUser = true
       navigator.geolocation.getCurrentPosition(position => {
-        this.zoomLevel = 12
+        this.zoomLevel = 16 
         this.center = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
         this.currentPlace = {
-          name: "Your location",
+          name: "Your current location",
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
-      this.locatingUser = false
+        this.locatingUser = false
+        this.onGetRiskyVisits()
       })
     },
     clickedOnMap (e) {
@@ -275,8 +286,31 @@ export default {
       this.$http.get(
         this.api.endpoint + '/risk/visit?userId=' + userId + '&lat=' + lat + '&lng=' + lng
       ).then(response => {
-        this.$set(this,'dangers', response.data)
+        this.dangers = response.data
+        this.filterRisk(this.checkInDate)
       })
+    },
+    filterRisk(date)
+    {
+      if (date === undefined)
+      {
+        return
+      }
+      var dangers = [];
+      for (var i = 0; i < this.dangers.length; i++)
+      {
+        var danger = this.dangers[i];
+
+        if (danger.CheckIn.indexOf(date) > -1)
+        {
+          dangers.push(danger)
+        }
+      }
+      this.$set(this, 'filteredDangers', this.dangers)
+    },
+    dateChanged()
+    {
+      this.filterRisk(this.checkInDate)
     },
   }
 }
@@ -331,4 +365,8 @@ export default {
 #submit-alert, #submit-btn {
   padding-left: 25px;
 }
+  .at-risk {
+    color: red;
+    font-weight: bold;
+  }
 </style>

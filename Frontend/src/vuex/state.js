@@ -1,4 +1,5 @@
 export default {
   userAuth: undefined,
-  userId: undefined
+  userId: undefined,
+  userStatus: undefined
 }
