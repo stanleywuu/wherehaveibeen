@@ -20,7 +20,7 @@
       </b-tabs>
     </b-card>
     <Confidentiality v-show="!this.userLoggedIn && !this.showDangerMap" />
-    <Status v-show="this.userLoggedIn && this.showStatus" @statusComplete="displayCheckinForm()" />
+    <!-- <Status v-show="this.userLoggedIn && this.showStatus" @statusComplete="displayCheckinForm()" /> -->
     <CheckIn v-show="this.userLoggedIn && this.showCheckin" class='authed-user' />
     <CheckInHistory v-show="this.userLoggedIn && this.showHistory" class='authed-user' />
     <RiskyHistory v-show="this.showDangerMap" class='authed-user' />
@@ -32,7 +32,7 @@
 import NavigationBar from '@/components/NavigationBar.vue'
 import LoginForm from '@/components/LoginForm.vue'
 import RegisterForm from '@/components/RegisterForm.vue'
-import Status from '@/components/Status.vue'
+// import Status from '@/components/Status.vue'
 import CheckIn from '@/components/CheckIn.vue'
 import CheckInHistory from '@/components/CheckInHistory.vue'
 import Welcome from '@/components/Welcome.vue'
@@ -46,7 +46,7 @@ export default {
     NavigationBar,
     LoginForm,
     RegisterForm,
-    Status,
+    // Status,
     CheckIn,
     CheckInHistory,
     RiskyHistory,
@@ -56,11 +56,11 @@ export default {
   },
   data () {
     return {
-      showCheckin: false,
+      showCheckin: true,
       showHistory: false,
       showSettings: false,
       showDangerMap: false,
-      showStatus: true,
+      // showStatus: true,
     }
   },
   computed: {
@@ -71,8 +71,8 @@ export default {
   watch: {
     userLoggedIn() {
       this.hideDangerMapOnAuth()
-      this.showCheckin = false
-      this.showStatus = true
+      this.showCheckin = true
+      // this.showStatus = true
     }
   },
   methods: {
@@ -87,14 +87,16 @@ export default {
       this.showCheckin = false
       this.showHistory = false
       this.showSettings = false
-      this.showStatus = false;
+      // this.showStatus = false
     },
     displayCheckinForm () {
       this.clearComponents()
+      this.showDangerMap = false
       this.showCheckin = true
     },
     displayHistory () {
       this.clearComponents()
+      this.showDangerMap = false
       this.showHistory = true
     },
     toggleDangerMap () {
@@ -104,6 +106,7 @@ export default {
     },
     displaySettings () {
       this.clearComponents()
+      this.showDangerMap = false
       this.showSettings = true
     }
   }
