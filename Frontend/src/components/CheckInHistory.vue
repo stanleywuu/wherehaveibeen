@@ -45,18 +45,17 @@
               </b-col>
             </b-row>
             <div class="history-text">{{ loc.Address }}</div>
+            <p />
             <div class="history-text">{{ dateFormatter(loc.CheckIn) }}</div>
             <div v-if="potentialRisk(loc)" class="d-flex flex-column align-content-end">
               <div class="d-flex flex-row-reverse">
-                <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1"
-                          @click="toggleShowRiskyEncounters(loc)">
+                <b-button variant="link" id='covid-interaction-btn' class="ml-1 mr-1" @click="toggleShowRiskyEncounters(loc)">
                   {{ loc.showRiskyEncounters ? 'Hide' : 'Show' }} {{ loc.RiskyInteractions }} risky encounter{{ loc.RiskyInteractions > 1 ? 's' : ''}}
                 </b-button>
               </div>
             </div>
             <div class="risky-text" v-if="loc.showRiskyEncounters">
-              <span v-for="detail in loc.details"
-                    :key="detail.VisitId">
+              <span v-for="detail in loc.details" :key="detail.VisitId">
                 <div class="label">Someone with symptoms was here at:</div>
                 <div class="text"><div class="label">Checked in:</div>{{ dateFormatter(detail.checkIn) }}</div>
                 <div class="text"><div class="label">Checked out:</div>{{ dateFormatter(detail.checkOut) }}</div>
@@ -71,6 +70,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'CheckInHistory',
   data () {
@@ -122,7 +123,7 @@ export default {
       }
     },
     dateFormatter (datetime) {
-      return new Date(Date.parse(datetime))
+      return moment(datetime).format('HH:mm DD/MM/YYYY')
     },
     getDetails (loc) {
       if (loc.data && loc.data.length > 0) {

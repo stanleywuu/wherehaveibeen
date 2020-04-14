@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { gmapApi } from 'vue2-google-maps'
 
 export default {
@@ -165,7 +166,11 @@ export default {
   watch: {
     userAuth() {
       this.clearMapQuery()
-      this.currentPlace = null
+      if (!this.$store.getters.getUserAuth) {
+        this.currentPlace = null
+      } else {
+        this.timeoutGeoLocate()
+      }
     }
   },
   methods: {
@@ -173,16 +178,12 @@ export default {
       this.$refs['autocomplete'].$el.value = ''
     },
     formattedDate () {
-      let date = new Date();
-      return date.getFullYear() + '-' +
-      (date.getMonth() + 1).toString().padStart(2, '0') + '-' +
-      date.getDate().toString().padStart(2, '0')
+      let date = new Date()
+      return moment(date).format('YYYY-MM-DD')
     },
     formattedTime () {
-      let date = new Date();
-      return date.getHours().toString().padStart(2, '0') + ':' +
-        date.getMinutes().toString().padStart(2, '0') + ':' +
-        date.getSeconds().toString().padStart(2, '0')
+      let date = new Date()
+      return moment(date).format('HH:mm:ss')
     },
     getPosition: function(marker) {
       return {
