@@ -165,6 +165,7 @@ export default {
   watch: {
     userAuth() {
       this.clearMapQuery()
+      this.currentPlace = null
     }
   },
   methods: {
