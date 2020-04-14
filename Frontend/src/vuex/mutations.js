@@ -5,7 +5,7 @@ export default {
   setUserId (state, payload) {
     state.userId = payload
   },
-  setUserStatus(state, payload) {
+  setUserStatus (state, payload) {
     state.userStatus = payload
   },
 }

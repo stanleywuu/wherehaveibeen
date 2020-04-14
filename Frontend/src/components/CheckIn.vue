@@ -1,8 +1,8 @@
 <template>
   <div id="check-in-container">
-    <h2>I'd like to report my travels</h2>
+    <h2>Where did you go today?</h2>
     <div class="instruction" >
-      Please find the places you have travelled to on the map and click "I was here" to record your travel history
+      Search our map, tell us when and hit 'Check In'
      </div>
     <gmap-autocomplete
       ref="autocomplete"
@@ -91,7 +91,7 @@
                 </b-row>
               </div>
                 <b-row id="submit-btn" class="align-self-end">
-                  <b-button @click="onCheckInSubmit()">I was here</b-button>
+                  <b-button @click="onCheckInSubmit()">Check In</b-button>
                 </b-row>
               <div class="mb-auto bd-highlight dangerous-checkins" v-if="filteredDangers.length > 0">
                 <span class="title">This place could be contagious</span>
@@ -151,7 +151,6 @@ export default {
     }
   },
   mounted () {
-    this.geolocate()
     this.timeoutGeoLocate()
   },
   computed: {
@@ -170,7 +169,6 @@ export default {
   },
   methods: {
     clearMapQuery () {
-      this.currentPlace = null
       this.$refs['autocomplete'].$el.value = ''
     },
     formattedDate () {
@@ -196,7 +194,6 @@ export default {
       this.zoomLevel = 16
       this.center.lat = this.currentPlace.geometry.location.lat()
       this.center.lng = this.currentPlace.geometry.location.lng()
-
       this.onGetRiskyVisits();
     },
     timeoutGeoLocate () {
@@ -222,7 +219,8 @@ export default {
           lng: position.coords.longitude
         }
         this.locatingUser = false
-        this.onGetRiskyVisits()
+        this.clearMapQuery()
+        // this.onGetRiskyVisits()
       })
     },
     clickedOnMap (e) {
@@ -238,8 +236,7 @@ export default {
       } else {
         this.currentPlace = {}
       }
-
-      this.onGetRiskyVisits();
+      // this.onGetRiskyVisits();
     },
     onCheckInSubmit () {
       let userToken = this.$store.getters.getUserToken
@@ -277,11 +274,10 @@ export default {
         this.api.errors.push(e)
       })
     },
-    onGetRiskyVisits()
-    {
-      var userId = this.$store.getters.getUserId;
-      var lat = this.center.lat;
-      var lng = this.center.lng;
+    onGetRiskyVisits () {
+      let userId = this.$store.getters.getUserId
+      let lat = this.center.lat
+      let lng = this.center.lng
 
       this.$http.get(
         this.api.endpoint + '/risk/visit?userId=' + userId + '&lat=' + lat + '&lng=' + lng
@@ -290,28 +286,23 @@ export default {
         this.filterRisk(this.checkInDate)
       })
     },
-    filterRisk(date)
-    {
-      if (date === undefined)
-      {
+    filterRisk (date) {
+      if (date === undefined) {
         return
       }
-      var dangers = [];
-      for (var i = 0; i < this.dangers.length; i++)
-      {
-        var danger = this.dangers[i];
+      let dangers = []
+      for (let i = 0; i < this.dangers.length; i++) {
+        let danger = this.dangers[i]
 
-        if (danger.CheckIn.indexOf(date) > -1)
-        {
+        if (danger.CheckIn.indexOf(date) > -1) {
           dangers.push(danger)
         }
       }
       this.$set(this, 'filteredDangers', this.dangers)
     },
-    dateChanged()
-    {
+    dateChanged () {
       this.filterRisk(this.checkInDate)
-    },
+    }
   }
 }
 </script>
@@ -337,12 +328,10 @@ export default {
   justify-content: center;
   padding-bottom: 10px;
 }
-.danger-container
-{
+.danger-container {
   background-color:#ffffcc;
 }
-.dangerous-checkins .title
-{
+.dangerous-checkins .title {
   display:block;
   width:100%;
   font-weight: bold;
@@ -350,16 +339,13 @@ export default {
   margin: 12px 0;
   background-color: #ffdddd;
 }
-.dangerous-checkins .even
-{
+.dangerous-checkins .even {
   background-color: #ffffcc;
 }
-.dangerous-checkins .odd
-{
+.dangerous-checkins .odd {
   background-color: #ffdddd;
 }
-#dangerous-checkins span
-{
+#dangerous-checkins span {
   display:inline-block
 }
 #submit-alert, #submit-btn {

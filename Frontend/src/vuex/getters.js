@@ -8,7 +8,7 @@ export default {
   getUserId (state) {
     return state.userId
   },
-  getUserStatus (state){
+  getUserStatus (state) {
     return state.userStatus
  }
 }
