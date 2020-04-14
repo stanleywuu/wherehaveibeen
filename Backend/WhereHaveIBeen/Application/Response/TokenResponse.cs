@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Response
 {
@@ -13,5 +11,7 @@ namespace Application.Response
         public DateTime? Expires { get; set; }
 
         public bool HasUnseenNotification { get; set; }
+
+        public bool Reported { get; set; }
     }
 }

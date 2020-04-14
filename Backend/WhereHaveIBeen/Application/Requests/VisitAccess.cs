@@ -68,7 +68,7 @@ SELECT * FROM VISITS v WHERE v.UserId = @UserId", new { UserId = userId });
             }
         }
 
-        public static async Task MarkVisitsAsRisky(int userId, DateTime targetedDay)
+        public static async Task UpdateVisitStatus(int userId, DateTime targetedDay, bool isRisky = true)
         {
             using (var conn = ContextProvider.Instance.Conn)
             {
@@ -89,7 +89,7 @@ SELECT * FROM Visits v WHERE
                         // this is all throw away since we can't connect to a sql instance
                         foreach (var visit in affectedVisits)
                         {
-                            visit.AtRisk = true;
+                            visit.AtRisk = isRisky;
                             conn.Update(visit, trans);
                         }
                         trans.Commit();

@@ -27,7 +27,18 @@ namespace WhereHaveIBeen.Controllers
         public async Task<ActionResult<ICollection<Visit>>> GetRisks([FromQuery]double lat, [FromQuery]double lng, [FromQuery]DateTime? from, [FromQuery]DateTime? to)
         {
             var riskyVisits = await UserAccess.GetAtRiskVisits(lat, lng, from, to);
-            return new OkObjectResult(riskyVisits);
+            var riskyResponses = riskyVisits.Select(v =>
+            new
+            {
+                Address = v.Address,
+                PlaceName = string.IsNullOrEmpty(v.PlaceName) ? v.Address : v.PlaceName,
+                Latitude = v.Latitude,
+                Longitude = v.Longitude,
+                CheckIn = v.CheckIn,
+                CheckOut = v.CheckOut
+            }).OrderBy(r => r.PlaceName);
+
+            return new OkObjectResult(riskyResponses);
         }
 
         [HttpGet("visit")]
