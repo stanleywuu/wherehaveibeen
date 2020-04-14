@@ -2,6 +2,7 @@
   <div id="app">
     <NavigationBar
       :userLoggedIn="this.userLoggedIn"
+      :userReportStatus="this.userReportStatus"
       :dangerMapDisplayed="this.showDangerMap"
       @displayCheckIn="displayCheckinForm()"
       @displayHistory="displayHistory()"
@@ -66,6 +67,9 @@ export default {
   computed: {
     userLoggedIn () {
       return this.$store.getters.getUserAuth
+    },
+    userReportStatus () {
+      return this.$store.getters.getUserReportStatus
     }
   },
   watch: {

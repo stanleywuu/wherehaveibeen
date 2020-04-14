@@ -10,5 +10,8 @@ export default {
   },
   getUserStatus (state) {
     return state.userStatus
+ },
+ getuserReportStatus (state) {
+   return state.userReportStatus
  }
 }

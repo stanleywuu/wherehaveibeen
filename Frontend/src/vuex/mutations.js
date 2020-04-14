@@ -8,4 +8,7 @@ export default {
   setUserStatus (state, payload) {
     state.userStatus = payload
   },
+  setUserReportStatus (state, payload) {
+    state.userReportStatus = payload
+  }
 }

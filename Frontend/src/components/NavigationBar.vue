@@ -11,9 +11,9 @@
             @click="$emit('toggleDangerMap')">
             {{ dangerMapDisplayed ? 'Hide' : 'Show' }} Report Map
           </b-button>
-          <b-button id='covid-report-btn' variant="danger" class="ml-2 mr-2"
-            @click="$bvModal.show('covid-modal')"
-            v-show="userLoggedIn">
+          <b-button v-if="userLoggedIn && !userReportStatus"
+            id='covid-report-btn' variant="danger" class="ml-2 mr-2"
+            @click="$bvModal.show('covid-modal')">
             I Have Symptoms
           </b-button>
           <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
@@ -41,7 +41,7 @@ export default {
   components :{
     CovidModal
   },
-  props: ['userLoggedIn', 'dangerMapDisplayed'],
+  props: ['userLoggedIn', 'userReportStatus', 'dangerMapDisplayed'],
   data () {
     return {
       expanded: false,
