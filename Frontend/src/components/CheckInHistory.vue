@@ -132,7 +132,7 @@ export default {
       this.$http.get(this.api.endpoint + '/visit/risk?visitId=' + loc.VisitId)
         .then(response => {
           if (response.data && response.data.length > 0) {
-            this.$set(loc, 'details', response.data)
+            loc.details = response.data
           }
         })
         .catch(e => {
@@ -141,7 +141,7 @@ export default {
     },
     toggleShowRiskyEncounters (loc) {
       const isShown = !loc.showRiskyEncounters
-      this.$set(loc, 'showRiskyEncounters', isShown)
+      loc.showRiskyEncounters = isShown
       if (!isShown) return
       this.getDetails(loc)
     },

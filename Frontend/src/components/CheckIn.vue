@@ -36,7 +36,6 @@
           <b-col md="6">
             <b-card-body
               class="d-flex align-items-start flex-column bd-highlight"
-              v-bind:class="{'danger-container':filteredDangers.length > 0 }"
               style="height: 100%;">
               <div class="place-container" >
                   <div v-if="this.userIsSick" class="at-risk">
@@ -93,22 +92,22 @@
                 <b-row id="submit-btn" class="align-self-end">
                   <b-button @click="onCheckInSubmit()">Check In</b-button>
                 </b-row>
-              <div class="mb-auto bd-highlight dangerous-checkins" v-if="filteredDangers.length > 0">
+              <!-- <div class="mb-auto bd-highlight dangerous-checkins" v-if="filteredDangers.length > 0">
                 <span class="title">This place could be contagious</span>
                 <b-row no-gutters
                   v-bind:class="{'even':index % 2 == 0, 'odd':index %2 > 0}"
                   v-for="(danger, index) in filteredDangers"
-                   :key="index">
-                   <b-row>
-                     <b-col md="6">
-                        <span>{{danger.Distance}} meters away</span>
+                  :key="index">
+                  <b-row>
+                    <b-col md="6">
+                      <span>{{danger.Distance}} meters away</span>
                     </b-col>
-                   </b-row>
-                   <b-row>
+                  </b-row>
+                  <b-row>
                     <span>{{danger.CheckIn}} - {{danger.CheckOut}}</span>
-                   </b-row>
+                  </b-row>
                 </b-row>
-              </div>
+              </div> -->
             </b-card-body>
           </b-col>
         </b-row>
@@ -147,8 +146,8 @@ export default {
       showSuccessAlert: false,
       showFailureAlert: false,
       hideGeolocateToolTip: true,
-      dangers:[],
-      filteredDangers:[]
+      // dangers:[],
+      // filteredDangers:[]
     }
   },
   mounted () {
@@ -196,7 +195,7 @@ export default {
       this.zoomLevel = 16
       this.center.lat = this.currentPlace.geometry.location.lat()
       this.center.lng = this.currentPlace.geometry.location.lng()
-      this.onGetRiskyVisits();
+      // this.onGetRiskyVisits();
     },
     timeoutGeoLocate () {
       this.geolocate()
@@ -276,35 +275,40 @@ export default {
         this.api.errors.push(e)
       })
     },
-    onGetRiskyVisits () {
-      let userId = this.$store.getters.getUserId
-      let lat = this.center.lat
-      let lng = this.center.lng
+    // onGetRiskyVisits () {
+    //   let userId = this.$store.getters.getUserId
+    //   let lat = this.center.lat
+    //   let lng = this.center.lng
 
-      this.$http.get(
-        this.api.endpoint + '/risk/visit?userId=' + userId + '&lat=' + lat + '&lng=' + lng
-      ).then(response => {
-        this.dangers = response.data
-        this.filterRisk(this.checkInDate)
-      })
-    },
-    filterRisk (date) {
-      if (date === undefined) {
-        return
-      }
-      let dangers = []
-      for (let i = 0; i < this.dangers.length; i++) {
-        let danger = this.dangers[i]
+    //   this.$http.get(
+    //     this.api.endpoint + '/risk/visit?userId=' + userId + '&lat=' + lat + '&lng=' + lng
+    //   ).then(response => {
+    //     this.dangers = response.data
+    //     // this.filterRisk(this.checkInDate)
+    //   })
+    // },
+    // filterRisk (date) {
+    //   if (date === undefined) {
+    //     return
+    //   }
+    //   let dangers = []
+    //   this.dangers.forEach(danger => {
+    //     if (danger.CheckIn.indexOf(date) > -1) {
+    //       dangers.push(danger)
+    //     }
+    //   })
+    //   // for (let i = 0; i < this.dangers.length; i++) {
+    //   //   let danger = this.dangers[i]
 
-        if (danger.CheckIn.indexOf(date) > -1) {
-          dangers.push(danger)
-        }
-      }
-      this.$set(this, 'filteredDangers', this.dangers)
-    },
-    dateChanged () {
-      this.filterRisk(this.checkInDate)
-    }
+    //   //   if (danger.CheckIn.indexOf(date) > -1) {
+    //   //     dangers.push(danger)
+    //   //   }
+    //   // }
+    //   this.filteredDangers = dangers
+    // },
+    // dateChanged () {
+    //   this.filterRisk(this.checkInDate)
+    // }
   }
 }
 </script>
