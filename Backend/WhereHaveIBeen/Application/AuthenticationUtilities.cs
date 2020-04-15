@@ -17,7 +17,7 @@ namespace Application
             return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Signingkey));
         }
 
-        public static string GenerateToken(int userId, string username)
+        public static string GenerateToken(int userId, string username, DateTime expiry)
         {
             var claims = new[]
              {
@@ -32,7 +32,7 @@ namespace Application
                 issuer: Issuer,
                 audience: Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: expiry,
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

@@ -42,6 +42,24 @@ SELECT * FROM VISITS v WHERE
                 return query.ToList();
             }
         }
+
+        public static async Task<ICollection<Visit>> GetAtRiskVisitsByBounds(double south, double north, double west, double east)
+        {
+            using (var conn = ContextProvider.Instance.Conn)
+            {
+                var query = await conn.QueryAsync<Visit>(@"
+SELECT * FROM VISITS v WHERE
+    v.AtRisk = 1 AND
+    v.Latitude >= @South AND
+    v.Latitude <= @North AND
+    v.Longitude >= @West AND
+    v.Longitude <= @East",
+    new { South = south, West = west, East = east, North = north });
+
+                return query.ToList();
+            }
+        }
+
         public static async Task<ICollection<Visit>> GetAtRiskVisitsByVisit(int userId, double lat, double lng, DateTime? from)
         {
             using (var conn = ContextProvider.Instance.Conn)

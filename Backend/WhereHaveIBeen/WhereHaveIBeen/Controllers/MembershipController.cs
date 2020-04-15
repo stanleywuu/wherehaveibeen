@@ -5,6 +5,7 @@ using Application.Response;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Storage;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -50,7 +51,8 @@ namespace WhereHaveIBeen.Controllers
             var existingUsers = await UserAccess.GetByUsernamePassword(request.Username, hashedPassword);
             var user = existingUsers.First();
 
-            var token = AuthenticationUtilities.GenerateToken(user.UserId, user.Username);
+            var expiry = DateTime.Now.AddDays(1);
+            var token = AuthenticationUtilities.GenerateToken(user.UserId, user.Username, expiry);
             user.Token = token;
 
             await user.UpdateAsync();
@@ -59,10 +61,39 @@ namespace WhereHaveIBeen.Controllers
             {
                 UserId = user.UserId,
                 Token = token,
-                HasUnseenNotification = await RiskAccess.IsPersonAtRisk(user.UserId)
+                Expires = expiry.ToUniversalTime(),
+                Reported = user.AtRisk
             };
 
             return new ActionResult<TokenResponse>(response);
+        }
+
+        [HttpPost("notcorona")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult> UndoCorona([FromQuery] int userId)
+        {
+            User user = null;
+
+            // You can only mark yourself as having corona
+            if (UserUtilities.GetUserId(httpContextAccessor.HttpContext.User) != userId)
+            {
+                return Unauthorized();
+            }
+
+            user = await DataAccess.Get<User, int>(userId);
+            user.AtRisk = false;
+            await user.UpdateAsync();
+
+            try
+            {
+                await VisitAccess.UpdateVisitStatus(userId, SqlConstants.DateTimeMin, false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update user as not having covid", ex);
+            }
+
+            return new OkResult();
         }
 
         [HttpPost("recovered")]
@@ -117,7 +148,7 @@ namespace WhereHaveIBeen.Controllers
             request.ToPersistedData(user);
 
             var targetedDay = DateTime.Today.AddDays(-18);
-            await VisitAccess.MarkVisitsAsRisky(userId, targetedDay);
+            await VisitAccess.UpdateVisitStatus(userId, targetedDay);
 
             user.AtRisk = true;
             await user.UpdateAsync();
