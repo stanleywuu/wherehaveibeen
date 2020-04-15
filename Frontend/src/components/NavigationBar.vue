@@ -1,7 +1,10 @@
 <template>
   <div id="nav-bar-container" class="mb-5">
     <b-navbar toggleable="md" type="dark" variant="dark">
-      <b-navbar-brand href='#' @click="$emit('displayCheckIn')">Where Have I Been?</b-navbar-brand>
+      <b-navbar-brand id="nav-branding" href="#" @click="$emit('displayCheckIn')">
+        <img src="@/assets/logo.png" id="site-logo" />
+        Where Have I Been?
+      </b-navbar-brand>
       <b-navbar-toggle target="nav-app-menu">
         <font-awesome-icon icon="bars" />
       </b-navbar-toggle>
@@ -99,15 +102,19 @@ export default {
       .catch(e => {
         this.api.errors.push(e)
       })
-    },
-    cancelReport() {
-      this.$refs['covid-modal'].hide()
     }
   }
 }
 </script>
 
 <style scoped>
+#site-logo {
+  width: 32px;
+  height: 32px;
+}
+#nav-branding {
+  vertical-align: center;
+}
 #covid-report-btn {
   color: #343a40 !important;
 }
