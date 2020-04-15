@@ -16,6 +16,10 @@
             @click="$bvModal.show('covid-modal')">
             I Have Symptoms
           </b-button>
+          <b-dropdown v-if="userLoggedIn && userReportStatus" split
+            text="I Have Recovered" variant="info" class="ml-2 mr-2">
+            <b-dropdown-item href="#">I didn't have COVID</b-dropdown-item>
+          </b-dropdown>
           <b-nav-item-dropdown text="Account" right v-show="userLoggedIn">
             <b-dropdown-item @click="$emit('displayHistory')">History</b-dropdown-item>
             <b-dropdown-item @click="$emit('displaySettings')">Settings</b-dropdown-item>
@@ -41,7 +45,11 @@ export default {
   components :{
     CovidModal
   },
-  props: ['userLoggedIn', 'userReportStatus', 'dangerMapDisplayed'],
+  props: [
+    'userLoggedIn',
+    'userReportStatus',
+    'dangerMapDisplayed'
+  ],
   data () {
     return {
       expanded: false,

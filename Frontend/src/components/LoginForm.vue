@@ -86,7 +86,6 @@ export default {
       .then(response => {
         this.clearFields()
         this.clearAlerts()
-        console.log(response.data)
         this.$store.dispatch('storeUserAuth', response.data.token)
         this.$store.dispatch('storeUserId', response.data.userId)
         this.$store.dispatch('storeUserReportStatus', response.data.reported)

@@ -8,7 +8,7 @@ export default {
   storeUserStatus (context, payload) {
     context.commit('setUserStatus', payload)
   },
-  storeUserReportedStatus (context, payload) {
+  storeUserReportStatus (context, payload) {
     context.commit('setUserReportStatus', payload)
   }
 }

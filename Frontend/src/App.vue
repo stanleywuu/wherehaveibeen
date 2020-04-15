@@ -1,16 +1,16 @@
 <template>
   <div id="app">
     <NavigationBar
-      :userLoggedIn="this.userLoggedIn"
-      :userReportStatus="this.userReportStatus"
-      :dangerMapDisplayed="this.showDangerMap"
+      :userLoggedIn="userLoggedIn"
+      :userReportStatus="userReportStatus"
+      :dangerMapDisplayed="showDangerMap"
       @displayCheckIn="displayCheckinForm()"
       @displayHistory="displayHistory()"
       @toggleDangerMap="toggleDangerMap()"
       @displaySettings="displaySettings()">
     </NavigationBar>
-    <Welcome v-show="!this.userLoggedIn && !this.showDangerMap" />
-    <b-card no-body v-show="!this.userLoggedIn && !this.showDangerMap" id='user-auth-actons'>
+    <Welcome v-show="!userLoggedIn && !showDangerMap" />
+    <b-card no-body v-show="!userLoggedIn && !showDangerMap" id='user-auth-actons'>
       <b-tabs card>
         <b-tab title='Login' id='login-form-card' ref='loginTab'>
           <LoginForm />
@@ -20,12 +20,12 @@
         </b-tab>
       </b-tabs>
     </b-card>
-    <Confidentiality v-show="!this.userLoggedIn && !this.showDangerMap" />
-    <!-- <Status v-show="this.userLoggedIn && this.showStatus" @statusComplete="displayCheckinForm()" /> -->
-    <CheckIn v-show="this.userLoggedIn && this.showCheckin" class='authed-user' />
-    <CheckInHistory v-show="this.userLoggedIn && this.showHistory" class='authed-user' />
-    <RiskyHistory v-show="this.showDangerMap" class='authed-user' />
-    <Settings v-show="this.userLoggedIn && this.showSettings" class='authed-user' />
+    <Confidentiality v-show="!userLoggedIn && !showDangerMap" />
+    <!-- <Status v-show="userLoggedIn && showStatus" @statusComplete="displayCheckinForm()" /> -->
+    <CheckIn v-show="userLoggedIn && showCheckin" class='authed-user' />
+    <CheckInHistory v-show="userLoggedIn && showHistory" class='authed-user' />
+    <RiskyHistory v-show="showDangerMap" class='authed-user' />
+    <Settings v-show="userLoggedIn && showSettings" class='authed-user' />
   </div>
 </template>
 
@@ -69,7 +69,7 @@ export default {
       return this.$store.getters.getUserAuth
     },
     userReportStatus () {
-      return this.$store.getters.getUserReportStatus
+      return this.$store.getters.getuserReportStatus
     }
   },
   watch: {

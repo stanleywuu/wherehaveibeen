@@ -14,7 +14,6 @@ const vuexLocalStorage = new VuexPersist({
   storage: window.localStorage
 })
 
-
 export default new Vuex.Store({
   state,
   actions,

@@ -6,6 +6,7 @@ import BootstrapVue from 'bootstrap-vue'
 import * as VueGoogleMaps from "vue2-google-maps"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
+  faBars,
   faBiohazard,
   faHandSparkles,
   faVirus,
@@ -18,6 +19,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
+library.add(faBars)
 library.add(faBiohazard)
 library.add(faHandSparkles)
 library.add(faVirus)
